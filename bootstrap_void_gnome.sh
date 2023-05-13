@@ -102,7 +102,7 @@ esac
 
 
 # Set up wireplumber
-echo "\e[1;32m> Setting up wireplumber session manager..\e[0m"; sleep 3
+echo -e "\e[1;32m> Setting up wireplumber session manager..\e[0m"; sleep 3
 if command -v pipewire >/dev/null 2>&1 && command -v wireplumber >/dev/null 2>&1; then
 	[ ! -d /etc/pipewire/ ] && sudo mkdir -p /etc/pipewire/
 	sudo cp /usr/share/pipewire/pipewire.conf /etc/pipewire/pipewire.conf
@@ -128,7 +128,7 @@ sudo ln -s /etc/sv/NetworkManager /var/service/
 
 echo -e "\e[1;32m------------- DONE! -------------\e[0m"; sleep 3
 if [["$variant" = "3"]]; then
-	echo "\e[32mYou use suckless, you know how to proceed. ;)\e[0m"
+	echo -e "\e[32mYou use suckless, you know how to proceed. ;)\e[0m"
 else
 	sudo ln -s "/etc/sv/$DM" /var/service
 	echo -e "    \e[1;32m$DM will start shortly.\e[0m"

@@ -67,7 +67,7 @@ check_deps() {
             type -P "$pkmgr" &> /dev/null || continue
             case $pkmgr in
                 xbps-install)
-                    sudo xbps-install -S curl git
+                    sudo xbps-install -Sy curl git
                     ;;
                 pacman)
                     sudo pacman -S curl git
@@ -114,7 +114,7 @@ fix_blurry_fonts() {
 
 ### Remove useless packages ###
 remove_packages() {
-    box "> Removing useless gnome packages.."
+    box "> Removing useless packages.."
     sleep 2
     sudo cp -v ./resources/99-ignored-pkgs.conf /etc/xbps.d/99-ignored-pkgs.conf
     sudo xbps-remove -Fy linux-firmware-amd linux-firmware-broadcom mobile-broadband-provider-info ipw2200-firmware ipw2100-firmware
