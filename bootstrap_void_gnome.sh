@@ -3,8 +3,8 @@
 ###############################################################################################
 # Author: imatsatsos                                                                          #
 # Description: This script setups Void Linux for Intel systems. It provides the user a choice #
-#	to install a minimal GNOME, PLASMA or SUCKLESS (DWM) setup, enables basic services and    #
-#	finally provides to install drivers in case the system will be used inside a VM. 		  #
+#    to install a minimal GNOME, PLASMA or SUCKLESS (DWM) setup, enables basic services and   #
+#    finally provides to install drivers in case the system will be used inside a VM.         #
 ###############################################################################################
 
 ###  Description of all installed pkgs  #######################################################
@@ -32,6 +32,10 @@
 # ntfs-3g 			> windows ntfs support
 ###############################################################################################
 
+COMMON="intel-ucode xorg-minimal dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber rtkit bluez gvfs ntfs-3g"
+VGA="mesa-dri intel-video-accel mesa-intel-dri mesa-vulkan-intel"
+PKGS="$COMMON $VGA"
+
 echo -e "\e[1;32m Is this a VM?  [Y/N]"
 read -r flag_vm
 
@@ -52,14 +56,10 @@ sudo xbps-install -uy xbps
 sudo xbps-install -Suy
 
 
-COMMON="intel-ucode xorg-minimal dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber rtkit bluez gvfs ntfs-3g"
-INTEL="mesa-dri intel-video-accel mesa-intel-dri mesa-vulkan-intel"
-PKGS="$COMMON $INTEL"
-
-
 # Install VM drivers [MORE TEST NEEDED]
 if [[ "$flag_vm" == [Y/y] ]]; then
-	PKGS="$PKGS xf86-video-qxl"
+	VGA="mesa-dri xf86-video-qxl"
+	PKGS="$COMMON $VGA"
 fi
 
 
@@ -87,6 +87,11 @@ case $variant in
 		## for dwm 
 		# xrandr picom xwallpaper thunar git
 		sudo xbps-install -y $PKGS
+		# git clone <dwm st etc..>
+		# cd <repodir>
+		# sudo make clean install
+		# setup .xinitrc
+		# startx
 	;;
 	
 	*)
@@ -97,10 +102,10 @@ esac
 
 
 # Set up wireplumber
-echo "\e[1;32m> Setting up wireplumber session manager..e[0m"; sleep 3
+echo "\e[1;32m> Setting up wireplumber session manager..\e[0m"; sleep 3
 if command -v pipewire >/dev/null 2>&1 && command -v wireplumber >/dev/null 2>&1; then
 	[ ! -d /etc/pipewire/ ] && sudo mkdir -p /etc/pipewire/
-	sudo cp /usr/share/pipewire/pipewire.conf /etc/pipewire/
+	sudo cp /usr/share/pipewire/pipewire.conf /etc/pipewire/pipewire.conf
 	sudo sed -i '/path.*=.*pipewire-media-session/s/{/#{/' /etc/pipewire/pipewire.conf
 	[ ! -d /etc/pipewire/pipewire.conf.d/ ] && sudo mkdir -p /etc/pipewire/pipewire.conf.d/
 	echo 'context.exec = [ { path = "/usr/bin/wireplumber" args = "" } ]' | sudo tee /etc/pipewire/pipewire.conf.d/10-wireplumber.conf
@@ -122,9 +127,9 @@ sudo ln -s /etc/sv/NetworkManager /var/service/
 
 
 echo -e "\e[1;32m------------- DONE! -------------\e[0m"; sleep 3
-if [["$variant" = 3]]; then
+if [["$variant" = "3"]]; then
 	echo "\e[32mYou use suckless, you know how to proceed. ;)\e[0m"
 else
 	sudo ln -s "/etc/sv/$DM" /var/service
-	echo -e "    \e[32m$DM will start shortly.\e[0m"
+	echo -e "    \e[1;32m$DM will start shortly.\e[0m"
 fi
