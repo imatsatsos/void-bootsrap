@@ -127,7 +127,7 @@ sudo ln -s /etc/sv/NetworkManager /var/service/
 
 
 echo -e "\e[1;32m------------- DONE! -------------\e[0m"; sleep 3
-if [["$variant" = "3"]]; then
+if [["$variant" -eq 3 ]]; then
 	echo -e "\e[32mYou use suckless, you know how to proceed. ;)\e[0m"
 else
 	sudo ln -s "/etc/sv/$DM" /var/service
