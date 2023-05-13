@@ -83,7 +83,7 @@ case $variant in
 	# 3: DWM (suckless)
 	3)
 		echo -e "\e[1;32m Suckless DWM dependencies installation..\e[0m"; sleep 3
-		PKGS="$PKGS base-devel dejavu-fonts-ttf libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel"
+		PKGS="$PKGS base-devel dejavu-fonts-ttf libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel xrandr"
 		## for dwm 
 		# xrandr picom xwallpaper thunar git
 		sudo xbps-install -y $PKGS
