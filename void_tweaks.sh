@@ -164,7 +164,7 @@ gaming_tweaks() {
 purge_kernels() {
     box "> Purging old kernels.."
     sleep 2
-    sudo xbps-remove linux-5.19 >/dev/null
+    sudo xbps-remove linux5.19 >/dev/null
     sudo vkpurge rm all
 }
 
