@@ -8,27 +8,31 @@
 ###############################################################################################
 
 ###  Description of all installed pkgs  #######################################################
-# xmirror 			> void util to set xbps mirror, I set it to tier-1 Germany
+# xmirror 			> void utility to set xbps mirror, I set it to tier-1 Germany
 # void-repo-nonfree > required for intel CPU microcode
 # intel-ucode 		> microcode update for intel CPUs
 # NetworkManager 	> internet conn  manager, it just works for wifi
 # xorg-minimal 		> minimal xorg setup
-# dbus 				> needed for apps to talk to the bus
+# dbus 				> needed for apps to talk to the desktop bus
 # mesa-dri 			> mesa driver for opengl hw accel
-# intel-video-accel > intel gpu driver
+# intel-video-accel > intel gpu driver + hw accel codecs
 # mesa-intel-dri 	> mesa support for intel gpu
 # mesa-vulkan-intel > vulkan intel driver
 # xdg-utils 		> basic XDG support (xdg-open, etc..)
 # xdg-user-dirs 	> XDG support for /downloads, /documents, etc..
-# gnome-core 		> minimal gnome
+# gnome-core 		> minimal gnome DE
 # eog 				> eye of gnome, image viewer
 # gnome-tweaks 		> gnome tweaks app
-# alacritty 		> terminal
-# pipewire 			> new audio engine
-# wireplumber 		> new audio session manager
+# dconf-editor      > edit hidden gnome settings, like volume step 
+# alacritty         > terminal
+# kde5              > minimal kde plasma DE
+# dolphin           > kde file explorer
+# konsole           > kde terminal
+# pipewire 			> new-era audio engine
+# wireplumber 		> new-era audio session manager
 # rtkit 			> pipewire optional dependency, sets realtime priority
 # bluez 			> bluetooth support
-# gvfs 				> mounting and trash for gnome
+# gvfs 				> mounting drives and trash for gnome
 # ntfs-3g 			> windows ntfs support
 ###############################################################################################
 
@@ -66,7 +70,7 @@ fi
 case $variant in
 	# 1: GNOME
 	1)
-		PKGS="$PKGS NetworkManager gnome-core eog gnome-tweaks alacritty"
+		PKGS="$PKGS NetworkManager gnome-core eog gnome-tweaks dconf-editor alacritty"
 		DM="gdm"
 		echo -e "\e[1;32m  Minimal GNOME DE installation..\e[0m"; sleep 3
 		sudo xbps-install -y $PKGS
@@ -109,11 +113,11 @@ if command -v pipewire >/dev/null 2>&1 && command -v wireplumber >/dev/null 2>&1
 	sudo sed -i '/path.*=.*pipewire-media-session/s/{/#{/' /etc/pipewire/pipewire.conf
 	[ ! -d /etc/pipewire/pipewire.conf.d/ ] && sudo mkdir -p /etc/pipewire/pipewire.conf.d/
 	echo 'context.exec = [ { path = "/usr/bin/wireplumber" args = "" } ]' | sudo tee /etc/pipewire/pipewire.conf.d/10-wireplumber.conf
+    sudo cp -v /usr/share/applications/pipewire-pulse.desktop /etc/xdg/autostart/
+    sudo cp -v /usr/share/applications/pipewire.desktop /etc/xdg/autostart/
 else
 	echo "\e[1;31m ! ERROR: pipewire and/or wireplumber is not installed!"; sleep 3
 fi
-sudo cp -v /usr/share/applications/pipewire-pulse.desktop /etc/xdg/autostart/
-sudo cp -v /usr/share/applications/pipewire.desktop /etc/xdg/autostart/
 
 
 # Services
@@ -131,5 +135,5 @@ if [["$variant" -eq 3 ]]; then
 	echo -e "\e[32mYou use suckless, you know how to proceed. ;)\e[0m"
 else
 	sudo ln -s "/etc/sv/$DM" /var/service
-	echo -e "    \e[1;32m$DM will start shortly.\e[0m"
+	echo -e "   \e[1;32m$DM will start shortly.\e[0m"
 fi
