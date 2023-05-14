@@ -44,8 +44,10 @@ echo -e "\e[1;32m Is this a VM?  [Y/N]"
 read -r flag_vm
 
 echo -e "\e[1;32m Choose a variant:"
-echo -e " Type 1 for GNOME, 2 for PLASMA, 3 for DWM.  [1/2/3]"
-read -r variant
+echo -e "\e[1;32m 1: GNOME"
+echo -e "\e[1;32m 2: PLASMA"
+echo -e "\e[1;32m 3: DWM"
+read -r "number: "variant
 
 
 echo -e "\e[1;32m  This will take some time, go grab a coffee!\e[0m"; sleep 3
@@ -99,7 +101,7 @@ case $variant in
 	;;
 	
 	*)
-		echo -e "\e[1;31mInvalid variant: please enter 1, 2, or 3.\e[0m"
+		echo -e "\e[1;31mInvalid variant.\e[0m"
 		exit 1
 	;;
 esac	
