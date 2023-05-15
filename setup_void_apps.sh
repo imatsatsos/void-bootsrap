@@ -32,7 +32,7 @@ install_steam() {
 	if [[ "$dm1" == [Y/y] ]]; then
 		sudo xbps-install -Sy void-repo-nonfree void-repo-multilib{,-nonfree}
 		sudo xbps-install -Sy steam libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit mesa-dri-32bit
-		box "Will you use an Nvidia GPU for Steam?  [Y?N]"
+		box "Will you use an Nvidia GPU for Steam?  [Y/N]"
 		read -r dm2
 		if [[ "$dm2" == [Y/y] ]]; then
 			sudo xbps-install -Sy nvidia-libs-32bit
