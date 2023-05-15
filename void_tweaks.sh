@@ -59,7 +59,7 @@ opening() {
 }
 
 check_deps() {
-    if command -v curl &> /dev/null && command -v git &> /dev/null && command -v fc-cache &> /dev/null
+    if command -v curl &> /dev/null && command -v git &> /dev/null && command -v fc-cache &> /dev/null && command -v unzip &> /dev/null
     then
         box "Dependencies found!"
     else
@@ -68,10 +68,11 @@ check_deps() {
             type -P "$pkmgr" &> /dev/null || continue
             case $pkmgr in
                 xbps-install)
-                    sudo xbps-install -Sy curl git fontconfig
+                    sudo xbps-install -Sy curl git fontconfig unzip
+                    box "Done"
                     ;;
                 pacman)
-                    sudo pacman -Suy curl git fontconfig
+                    sudo pacman -Suy curl git fontconfig unzip
                     ;;
             esac
             return
@@ -83,9 +84,10 @@ check_deps() {
 disable_services() {
     box "> Disabling useless services.."
     sleep 2
-    [ -d /var/service/wpa_supplicant ] &&  sudo rm -v /var/service/wpa_supplicant
+    [ -d /var/service/wpa_supplicant ] && sudo rm -v /var/service/wpa_supplicant
     [ -d /var/service/dhcpcd ] && sudo rm -v /var/service/dhcpcd
     [ -d /var/service/sshd ] && sudo rm -v /var/service/sshd
+    box "Done"
 }
 
 ### Disable autostarts, mainly gnome ###
@@ -103,14 +105,16 @@ disable_autostarts() {
     echo "Hidden=true" >> ~/.config/autostart/org.gnome.Evolution-alarm-notify.desktop
     #[ ! -f ~/.config/autostart/tracker-miner-fs-3.desktop ] && cp -v /etc/xdg/autostart/tracker-miner-fs-3.desktop ~/.config/autostart/
     #echo "Hidden=true" >> ~/.config/autostart/tracker-miner-fs-3.desktop
+    box "Done"
 }
 
 ### Fix blurry fonts ###
 fix_blurry_fonts() {
     box "> Fixing blurry bitmap fonts.."
     sleep 2
-    sudo ln -sv /usr/share/fontconfig/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d/
+    [ ! -f /etc/fonts/conf.d/70-no-bitmaps.conf ] &&  sudo ln -sv /usr/share/fontconfig/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d/
     sudo xbps-reconfigure -f fontconfig
+    box "Done"
 }
 
 ### Remove useless packages ###
@@ -119,6 +123,7 @@ remove_packages() {
     sleep 2
     sudo cp -v ./resources/99-ignored-pkgs.conf /etc/xbps.d/99-ignored-pkgs.conf
     sudo xbps-remove -Fy linux-firmware-amd linux-firmware-broadcom mobile-broadband-provider-info ipw2200-firmware ipw2100-firmware
+    box "Done"
 }
 
 ### Set io-schedulers ###
@@ -127,6 +132,7 @@ set_io_schedulers() {
     sleep 2
     [ ! -d /etc/udev/rules.d/ ] && sudo mkdir -p /etc/udev/rules.d/
     sudo cp -v ./resources/60-ioschedulers.rules /etc/udev/rules.d/60-ioschedulers.rules
+    box "Done"
 }
 
 ### Set modprobe blacklist ###
@@ -135,6 +141,7 @@ set_modprobe_bl() {
     sleep 2
     [ ! -d /etc/modprobe.d/ ] && mkdir -p /etc/modprobe.d/
     sudo cp -v ./resources/modprobe.conf /etc/modprobe.d/modprobe.conf
+    box "Done"
 }
 
 ### Create intel-undervolt service ###
@@ -142,11 +149,16 @@ sv_intel_undervolt() {
     box "> Creating intel-undervolt service and setting undervolt conf.."
     sleep 2
     sudo xbps-install -y intel-undervolt
-    sudo cp ./resources/intel-undervolt.conf /etc/intel-undervolt.conf
-    [ ! -d /etc/sv/intel-undervolt/ ] && sudo mkdir -p /etc/sv/intel-undervolt/
-    sudo cp -fv ./resources/intel-undervolt/run /etc/sv/intel-undervolt/run
-    sudo chmod +x /etc/sv/intel-undervolt/run
-    sudo ln -s /etc/sv/intel-undervolt /var/service/
+    [ ! -f /etc/intel-undervolt.conf  ] &&  sudo cp ./resources/intel-undervolt.conf /etc/intel-undervolt.conf
+    if [ -d "/etc/sv/intel-undervolt/"  ]; then
+		box "intel-undervolt service already configured!"
+	else
+		sudo mkdir -p /etc/sv/intel-undervolt/
+		sudo cp -fv ./resources/intel-undervolt/run /etc/sv/intel-undervolt/run
+		sudo chmod +x /etc/sv/intel-undervolt/run
+		sudo ln -s /etc/sv/intel-undervolt /var/service/
+		box "Done"
+    fi
 }
 
 ### Gaming tweaks ###
@@ -159,6 +171,7 @@ gaming_tweaks() {
     box "> Enabling Esync.."
     sleep 1.5
     echo "$(whoami) hard nofile 524288" | sudo tee -a /etc/security/limits.conf
+    box "Done"
 }
 
 ### Purge old kernels
@@ -167,6 +180,7 @@ purge_kernels() {
     sleep 2
     sudo xbps-remove -y linux5.19 >/dev/null
     sudo vkpurge rm all
+    box "Done"
 }
 
 ### Install intel microcode and rebuild initramfs ###
@@ -181,6 +195,7 @@ intel_microcode() {
 		sudo xbps-install -Sy intel-ucode
 		sleep 1
 		sudo xbps-reconfigure --force linux$(uname -r | cut -d '.' -f 1,2)
+		box "Done"
 	fi
 }
 
@@ -189,9 +204,12 @@ grub_commandline() {
     boxu "> Adding: quiet loglevel=3 rd.udev.log_level=3 console=tty2 mitigations=off nowatchdog nmi_watchdog=0 to grub.."
     sleep 1
     sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&quiet loglevel=3 rd.udev.log_level=3 console=tty2 mitigations=off nowatchdog nmi_watchdog=0 /' /etc/default/grub
-    boxd "> Setting grub timeout to 1 sec.."
+    box "> Setting grub timeout to 1 sec.."
     sudo sed -i 's/GRUB_TIMEOUT.*/GRUB_TIMEOUT=1/' /etc/default/grub
+    boxd "> Setting nice grub for Void ;)"
+    sudo sed -i 's/^#GRUB_BACKGROUND/GRUB_BACKGROUND/' /etc/default/grub
     sudo grub-mkconfig -o /boot/grub/grub.cfg
+    box "Done"
 }
 
 ### Fstab ext4 tweaks ###
@@ -199,6 +217,7 @@ set_fstab() {
     box  "> Adding: noatime,commit=60 to fstab for ext4 / partition.."
     sleep 2
     sudo sed -i '/^\S*\s\+\/\s/{s/defaults/&,noatime,commit=60/}' /etc/fstab
+    box "Done"
 }
 
 ### Install fonts ###
@@ -214,12 +233,14 @@ install_fonts() {
 		mv ./Hack ~/.local/share/fonts/
 		rm Hack.zip
 		fc-cache -f
+		box "Done"
 	fi
 }
 
 ### Load GNOME Settings ###
 load_gnome_settings() {
-	currentDE="$( echo $XDG_CURRENT_SESSION )"
+	currentDE="$( echo $XDG_CURRENT_DESKTOP )"
+	echo $currentDE
 	case $currentDE in
 		"GNOME")
 			box "\e[1;31m> Next step will load GNOME settings, is this ok? [Y/N]"
@@ -230,6 +251,7 @@ load_gnome_settings() {
 					box "> Loading gnome settings.."
 					sleep 1
 					dconf load /org/gnome/ < ./resources/gnome_settings
+					box "Done"
 				else
 					box "\e[1;31m! ERROR: dconf not found!"
 				fi
