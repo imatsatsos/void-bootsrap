@@ -10,7 +10,11 @@ box() {
     title=" $1 "
     echo -e "\e[1;31m$title\e[0m"
 }
-
+boxg(){
+	title=" $1 "
+	echo -e "\e[1;32m$title\e[0m"
+ }
+ 
 menu() {
 	box "Welcome! This script will help you get your apps installed faf."
 	box "Your Options are:"
@@ -33,6 +37,7 @@ install_steam() {
 		if [[ "$dm2" == [Y/y] ]]; then
 			sudo xbps-install -Sy nvidia-libs-32bit
 		fi
+		boxg "Steam installed!"; echo ""
 	fi
 }
 
@@ -41,20 +46,25 @@ install_flatpak() {
 	read -r dm3
 	if [[ "$dm3" == [Y/y] ]]; then
 		sudo xbps-install -Sy flatpak; sleep 0.5
-		flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo; sleep 0.5
-		flatpak update --appstream
+		if command -v flatpak &> /dev/null
+			flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo; sleep 0.5
+			flatpak update --appstream
+			boxg "Flatpak installed!"; echo ""
+		else
+			box "! ERROR: Something went wrong .."
 	## TODO: menu for some of my flatpaks
 	fi
 }
 
 install_collection() {
 	box "Do you want to: Install Collection?   [Y/N]"
-	echo "(alacritty, geany, htop, neovim, mpv, yt-dlp, easyeffects, lutris, fzf, curl"
-	echo " git, xmirror, xrandr, xinput, intel-undervolt, intel-gpu-tools, glxinfo, libva-utils)"
+	box "(alacritty, geany, htop, neovim, mpv, yt-dlp, easyeffects, lutris, fzf, curl"
+	box " git, xmirror, xrandr, xinput, intel-undervolt, intel-gpu-tools, glxinfo, libva-utils)"
 	read -r dm4
 	if [[ "$dm4" == [Y/y] ]]; then
 		sudo xbps-install -Sy alacritty geany htop neovim mpv yt-dlp ffmpeg easyeffects lutris fzf
 		sudo xbps-install -y curl git xmirror xrandr xinput intel-undervolt intel-gpu-tools glxinfo libva-utils
+		boxg "Collection installed!"; echo ""
 	fi
 }
 # alacritty > terminal
@@ -85,6 +95,7 @@ install_virtmanager() {
 		sudo ln -s /etc/sv/libvirtd/ /var/service/
 		sudo ln -s /etc/sv/virtlogd/ /var/service/
 		sudo usermod -a -G libvirt $(whoami)
+		boxg "Virt-manager installed!"; echo ""
 	fi
 }
 
@@ -105,7 +116,7 @@ while true; do
 			install_collection
 		;;
 		0)
-			echo "Bye bye"
+			boxg "Bye bye!"
 			exit 0
 		;;
 		*)

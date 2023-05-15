@@ -63,6 +63,7 @@ check_deps() {
     then
         box "Dependencies found!"
     else
+		box "Installing dependencies.."
         for pkmgr in xbps-install pacman; do
             type -P "$pkmgr" &> /dev/null || continue
             case $pkmgr in
