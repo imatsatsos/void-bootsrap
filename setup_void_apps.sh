@@ -46,7 +46,7 @@ install_flatpak() {
 	read -r dm3
 	if [[ "$dm3" == [Y/y] ]]; then
 		sudo xbps-install -Sy flatpak; sleep 0.5
-		if command -v flatpak &> /dev/null; then
+		if command -v flatpak >/dev/null 2>&1; then
 			flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo; sleep 0.5
 			flatpak update --appstream
 			boxg "Flatpak installed!"; echo ""

@@ -43,10 +43,10 @@ check_root() {
 }
 
 opening() {
-    boxf "                   !!!!  IMPORTANT  !!!!                    "
-    boxu " THIS SCRIPT HEAVILY MODIFIES CORE SERVICES OF THE GNOME DE "
-    box "   AND APPLIES MY PREFFERED SETUP TO A VOID LINUX SYSTEM.   "
-    box " YOU SHOULD ONLY RUN THIS AFTER INSTALLING GNOME DE ON VOID "
+    box  "                   !!!!  IMPORTANT  !!!!                    "
+    boxu "   THIS SCRIPT MODIFIES SERVICES, APPLICATION AUTOSTARTS,   "
+    box  "   REMOVES APPS, TWEAKS SETTINGS AND APPLIES MY PREFFERED   "
+    box  " SETUP TO A VOID LINUX SYSTEM. READ IT BEFORE RUNNING IT.   "
     boxd "            Do you still want to continue? [Y/N]            "
     read -r accept
     if [[ "$accept" == [Y/y] ]];
@@ -59,7 +59,7 @@ opening() {
 }
 
 check_deps() {
-    if command -v curl &> /dev/null && command -v git &> /dev/null
+    if command -v curl &> /dev/null && command -v git &> /dev/null && command -v fc-cache &> /dev/null
     then
         box "Dependencies found!"
     else
@@ -68,10 +68,10 @@ check_deps() {
             type -P "$pkmgr" &> /dev/null || continue
             case $pkmgr in
                 xbps-install)
-                    sudo xbps-install -Sy curl git
+                    sudo xbps-install -Sy curl git fontconfig
                     ;;
                 pacman)
-                    sudo pacman -S curl git
+                    sudo pacman -Suy curl git fontconfig
                     ;;
             esac
             return
@@ -88,9 +88,9 @@ disable_services() {
     [ -d /var/service/sshd ] && sudo rm -v /var/service/sshd
 }
 
-### Disable gnome autostarts ###
-disable_gnome_autostarts() {    
-    box "> Disabling useless gnome autostarts.."
+### Disable autostarts, mainly gnome ###
+disable_autostarts() {    
+    box "> Disabling useless autostarts.."
     sleep 2
     [ ! -d ~/.config/autostart/ ] &&  mkdir -p ~/.config/autostart/
     [ ! -f ~/.config/autostart/zeitgeist-datahub.desktop ] && cp -v /etc/xdg/autostart/zeitgeist-datahub.desktop ~/.config/autostart/
@@ -219,17 +219,29 @@ install_fonts() {
 
 ### Load GNOME Settings ###
 load_gnome_settings() {
-    box "\e[1;31m> Next step will load GNOME settings, is this ok? [Y/N]"
-    read -r accept
-    if [[ "$accept" == [Y/y] ]];
-    then
-		box "> Loading gnome settings.."
-		sleep 1
-		dconf load /org/gnome/ < ./resources/gnome_settings
-    else
-        box "> That's ok, you want to make it your own!"
-        exit
-    fi
+	currentDE="$( echo $XDG_CURRENT_SESSION )"
+	case $currentDE in
+		"GNOME")
+			box "\e[1;31m> Next step will load GNOME settings, is this ok? [Y/N]"
+			read -r accept
+			if [[ "$accept" == [Y/y] ]];
+			then
+				if command -v dconf >/dev/null 2>&1; then
+					box "> Loading gnome settings.."
+					sleep 1
+					dconf load /org/gnome/ < ./resources/gnome_settings
+				else
+					box "\e[1;31m! ERROR: dconf not found!"
+				fi
+			else
+				box "> That's ok, you want to make it your own!"
+				exit
+			fi
+			;;
+		*)
+		box "\e[1;31m Unsupported DE/WM"
+			;;
+	esac
 }
 
 load_dotfiles(){
@@ -240,7 +252,7 @@ load_dotfiles(){
 		if [ -d dotfiles/ ]; then
 			chmod a+x ./dotfiles/setup_bash.sh
 			source ./dotfiles/setup_bash.sh
-			rm -rf ./dotfiles/
+			#rm -rf ./dotfiles/
 		else
 			box "\e[1;31m! ERROR: git clone failed!"
 		fi
@@ -258,7 +270,7 @@ check_deps
 box "(progress: 1/$num_steps)"
 disable_services
 box "(progress: 2/$num_steps)"
-disable_gnome_autostarts
+disable_autostarts
 box "(progress: 3/$num_steps)"
 remove_packages
 box "(progress: 4/$num_steps)"
