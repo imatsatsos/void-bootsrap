@@ -33,10 +33,9 @@
 # rtkit 			> pipewire optional dependency, sets realtime priority
 # bluez 			> bluetooth support
 # gvfs 				> mounting drives and trash for gnome
-# ntfs-3g 			> windows ntfs support
 ###############################################################################################
 
-COMMON="intel-ucode xorg-minimal dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber rtkit bluez gvfs ntfs-3g"
+COMMON="intel-ucode xorg-minimal dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber rtkit bluez gvfs"
 VGA="mesa-dri intel-video-accel mesa-intel-dri mesa-vulkan-intel"
 PKGS="$COMMON $VGA"
 
