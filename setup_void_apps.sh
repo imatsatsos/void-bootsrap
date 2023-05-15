@@ -52,6 +52,7 @@ install_flatpak() {
 			boxg "Flatpak installed!"; echo ""
 		else
 			box "! ERROR: Something went wrong .."
+		fi
 	## TODO: menu for some of my flatpaks
 	fi
 }
