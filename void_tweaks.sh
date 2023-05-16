@@ -63,7 +63,7 @@ check_deps() {
     then
         box "Dependencies found! \n"
     else
-		box "Installing dependencies.."
+		boxf "Installing dependencies.."
         for pkmgr in xbps-install pacman; do
             type -P "$pkmgr" &> /dev/null || continue
             case $pkmgr in
@@ -120,7 +120,7 @@ fix_blurry_fonts() {
 
 ### Remove useless packages ###
 remove_packages() {
-    box "> Removing useless packages.."
+    boxf "> Removing useless packages.."
     sleep 2
     sudo cp -v ./resources/99-ignored-pkgs.conf /etc/xbps.d/99-ignored-pkgs.conf
     sudo xbps-remove -Fy linux-firmware-amd linux-firmware-broadcom mobile-broadband-provider-info ipw2200-firmware ipw2100-firmware
@@ -164,12 +164,11 @@ sv_intel_undervolt() {
 
 ### Gaming tweaks ###
 gaming_tweaks() {
-    # vm.max_map_count
-    boxf "> Setting vm.max_map_count.."
+    boxf "> Setting vm.max_map_count, Enabling Esync.."
     sleep 1.5
+    # vm.max_map_count
     echo "vm.max_map_count=2147483642" | sudo tee -a /etc/sysctl.conf
     # enable Esync
-    box "> Enabling Esync.."
     sleep 1.5
     echo "$(whoami) hard nofile 524288" | sudo tee -a /etc/security/limits.conf
     box "Done \n"
@@ -189,7 +188,7 @@ intel_microcode() {
     boxf "> Installing intel-ucode and rebuilding initramfs.."
     sleep 2
     if xbps-query intel-ucode >/dev/null 2>&1; then
-		echo "! Intel-ucode already installed \n"
+		box "! Intel-ucode already installed \n"
 	else
 		sudo xbps-install -Sy void-repo-nonfree
 		sleep 0.3
@@ -321,8 +320,9 @@ fix_blurry_fonts
 load_gnome_settings
 load_dotfiles
 
-box "> Running a trim on all supported disks.."
+boxf "> Running a trim on all supported disks.."
 sudo fstrim -va
+box "Done \n"
 
 boxu "============= WE ARE DONE! =============="
 boxd "            Please reboot !!!            "
