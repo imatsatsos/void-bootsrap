@@ -43,7 +43,7 @@ check_root() {
 }
 
 opening() {
-    box  "                   !!!!  IMPORTANT  !!!!                    "
+    boxu  "                   !!!!  IMPORTANT  !!!!                    "
     boxu "   THIS SCRIPT MODIFIES SERVICES, APPLICATION AUTOSTARTS,   "
     box  "   REMOVES APPS, TWEAKS SETTINGS AND APPLIES MY PREFFERED   "
     box  " SETUP TO A VOID LINUX SYSTEM. READ IT BEFORE RUNNING IT.   "
@@ -51,9 +51,9 @@ opening() {
     read -r accept
     if [[ "$accept" == [Y/y] ]];
     then
-        box "OK! Lets get started!"
+        box "OK! Lets get started! \n"
     else
-        box "That's ok, thanks for checking out this script"
+        box "That's ok, thanks for checking out this script \n"
         exit
     fi
 }
@@ -61,7 +61,7 @@ opening() {
 check_deps() {
     if command -v curl &> /dev/null && command -v git &> /dev/null && command -v fc-cache &> /dev/null && command -v unzip &> /dev/null
     then
-        box "Dependencies found!"
+        box "Dependencies found! \n"
     else
 		box "Installing dependencies.."
         for pkmgr in xbps-install pacman; do
@@ -69,7 +69,7 @@ check_deps() {
             case $pkmgr in
                 xbps-install)
                     sudo xbps-install -Sy curl git fontconfig unzip
-                    box "Done"
+                    box "Done \n"
                     ;;
                 pacman)
                     sudo pacman -Suy curl git fontconfig unzip
@@ -82,39 +82,40 @@ check_deps() {
 
 ### Disable useless services (for a laptop) ###
 disable_services() {
-    box "> Disabling useless services.."
+    boxf "> Disabling useless services.."
     sleep 2
-    [ -d /var/service/wpa_supplicant ] && sudo rm -v /var/service/wpa_supplicant
-    [ -d /var/service/dhcpcd ] && sudo rm -v /var/service/dhcpcd
-    [ -d /var/service/sshd ] && sudo rm -v /var/service/sshd
-    box "Done"
+    [ -d /var/service/wpa_supplicant ] 	&& sudo rm -v /var/service/wpa_supplicant
+    [ -d /var/service/dhcpcd ] 			&& sudo rm -v /var/service/dhcpcd
+    [ -d /var/service/sshd ] 			&& sudo rm -v /var/service/sshd
+    box "Done \n"
 }
 
 ### Disable autostarts, mainly gnome ###
 disable_autostarts() {    
-    box "> Disabling useless autostarts.."
+    boxf "> Disabling useless autostarts.."
     sleep 2
-    [ ! -d ~/.config/autostart/ ] &&  mkdir -p ~/.config/autostart/
-    [ ! -f ~/.config/autostart/zeitgeist-datahub.desktop ] && cp -v /etc/xdg/autostart/zeitgeist-datahub.desktop ~/.config/autostart/
-    echo "Hidden=true" >> ~/.config/autostart/zeitgeist-datahub.desktop
-    [ ! -f ~/.config/autostart/org.gnome.SettingsDaemon.Wacom.desktop ] && cp -v /etc/xdg/autostart/org.gnome.SettingsDaemon.Wacom.desktop ~/.config/autostart/
-    echo "Hidden=true" >> ~/.config/autostart/org.gnome.SettingsDaemon.Wacom.desktop
-    [ ! -f ~/.config/autostart/org.gnome.SettingsDaemon.A11ySettings.desktop ] && cp -v /etc/xdg/autostart/org.gnome.SettingsDaemon.A11ySettings.desktop ~/.config/autostart/
-    echo "Hidden=true" >> ~/.config/autostart/org.gnome.SettingsDaemon.A11ySettings.desktop
-    [ ! -f ~/.config/autostart/org.gnome.Evolution-alarm-notify.desktop ] && cp -v /etc/xdg/autostart/org.gnome.Evolution-alarm-notify.desktop ~/.config/autostart/
-    echo "Hidden=true" >> ~/.config/autostart/org.gnome.Evolution-alarm-notify.desktop
+    SYS_AUTOSTART="/etc/xdg/autostart/"; USER_AUTOSTART="~/.config/autostart/";
+    [ ! -d ${USER_AUTOSTART} ] &&  mkdir -p ${USER_AUTOSTART}
+    [ ! -f ${USER_AUTOSTART}/zeitgeist-datahub.desktop ] 						&& cp -v ${SYS_AUTOSTART}/zeitgeist-datahub.desktop 				${USER_AUTOSTART}
+    echo "Hidden=true" >> ${USER_AUTOSTART}/zeitgeist-datahub.desktop
+    [ ! -f ${USER_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop ] 			&& cp -v ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop 	${USER_AUTOSTART}
+    echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop
+    [ ! -f ${USER_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ] 	&& cp -v ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ${USER_AUTOSTART}
+    echo "Hidden=true" >> ~${USER_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop
+    [ ! -f ${USER_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop ] 		&& cp -v ${SYS_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop 	${USER_AUTOSTART}
+    echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop
     #[ ! -f ~/.config/autostart/tracker-miner-fs-3.desktop ] && cp -v /etc/xdg/autostart/tracker-miner-fs-3.desktop ~/.config/autostart/
     #echo "Hidden=true" >> ~/.config/autostart/tracker-miner-fs-3.desktop
-    box "Done"
+    box "Done \n"
 }
 
 ### Fix blurry fonts ###
 fix_blurry_fonts() {
-    box "> Fixing blurry bitmap fonts.."
+    boxf "> Fixing blurry bitmap fonts.."
     sleep 2
     [ ! -f /etc/fonts/conf.d/70-no-bitmaps.conf ] &&  sudo ln -sv /usr/share/fontconfig/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d/
     sudo xbps-reconfigure -f fontconfig
-    box "Done"
+    box "Done \n"
 }
 
 ### Remove useless packages ###
@@ -123,117 +124,119 @@ remove_packages() {
     sleep 2
     sudo cp -v ./resources/99-ignored-pkgs.conf /etc/xbps.d/99-ignored-pkgs.conf
     sudo xbps-remove -Fy linux-firmware-amd linux-firmware-broadcom mobile-broadband-provider-info ipw2200-firmware ipw2100-firmware
-    box "Done"
+    box "Done \n"
 }
 
 ### Set io-schedulers ###
 set_io_schedulers() {
-    box "> Setting io-schedulers.."
+    boxf "> Setting io-schedulers.."
     sleep 2
     [ ! -d /etc/udev/rules.d/ ] && sudo mkdir -p /etc/udev/rules.d/
     sudo cp -v ./resources/60-ioschedulers.rules /etc/udev/rules.d/60-ioschedulers.rules
-    box "Done"
+    box "Done \n"
 }
 
 ### Set modprobe blacklist ###
 set_modprobe_bl() {
-    box "> Setting modprobe.."
+    boxf "> Setting modprobe.."
     sleep 2
     [ ! -d /etc/modprobe.d/ ] && mkdir -p /etc/modprobe.d/
     sudo cp -v ./resources/modprobe.conf /etc/modprobe.d/modprobe.conf
-    box "Done"
+    box "Done \n"
 }
 
 ### Create intel-undervolt service ###
 sv_intel_undervolt() {
-    box "> Creating intel-undervolt service and setting undervolt conf.."
+    boxf "> Creating intel-undervolt service and setting undervolt conf.."
     sleep 2
     sudo xbps-install -y intel-undervolt
     [ ! -f /etc/intel-undervolt.conf  ] &&  sudo cp ./resources/intel-undervolt.conf /etc/intel-undervolt.conf
     if [ -d "/etc/sv/intel-undervolt/"  ]; then
-		box "intel-undervolt service already configured!"
+		box "! intel-undervolt service already configured \n"
 	else
 		sudo mkdir -p /etc/sv/intel-undervolt/
 		sudo cp -fv ./resources/intel-undervolt/run /etc/sv/intel-undervolt/run
 		sudo chmod +x /etc/sv/intel-undervolt/run
 		sudo ln -s /etc/sv/intel-undervolt /var/service/
-		box "Done"
+		box "Done \n"
     fi
 }
 
 ### Gaming tweaks ###
 gaming_tweaks() {
     # vm.max_map_count
-    box "> Setting vm.max_map_count.."
+    boxf "> Setting vm.max_map_count.."
     sleep 1.5
     echo "vm.max_map_count=2147483642" | sudo tee -a /etc/sysctl.conf
     # enable Esync
     box "> Enabling Esync.."
     sleep 1.5
     echo "$(whoami) hard nofile 524288" | sudo tee -a /etc/security/limits.conf
-    box "Done"
+    box "Done \n"
 }
 
 ### Purge old kernels
 purge_kernels() {
-    box "> Purging old kernels.."
+    boxf "> Purging old kernels.."
     sleep 2
     sudo xbps-remove -y linux5.19 >/dev/null
     sudo vkpurge rm all
-    box "Done"
+    box "Done \n"
 }
 
 ### Install intel microcode and rebuild initramfs ###
 intel_microcode() {
-    box "> Installing intel-ucode and rebuilding initramfs.."
+    boxf "> Installing intel-ucode and rebuilding initramfs.."
     sleep 2
     if xbps-query intel-ucode >/dev/null 2>&1; then
-		echo "> Intel-ucode already installed"
+		echo "! Intel-ucode already installed \n"
 	else
 		sudo xbps-install -Sy void-repo-nonfree
 		sleep 0.3
 		sudo xbps-install -Sy intel-ucode
 		sleep 1
 		sudo xbps-reconfigure --force linux$(uname -r | cut -d '.' -f 1,2)
-		box "Done"
+		box "Done \n"
 	fi
 }
 
 ### Grub changes ###
 grub_commandline() {
-    boxu "> Adding: quiet loglevel=3 rd.udev.log_level=3 console=tty2 mitigations=off nowatchdog nmi_watchdog=0 to grub.."
+    boxf "> Grub mods: silence, speed-up, logo, disable mitigations, disable watchdog"
     sleep 1
     sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&quiet loglevel=3 rd.udev.log_level=3 console=tty2 mitigations=off nowatchdog nmi_watchdog=0 /' /etc/default/grub
-    box "> Setting grub timeout to 1 sec.."
     sudo sed -i 's/GRUB_TIMEOUT.*/GRUB_TIMEOUT=1/' /etc/default/grub
-    boxd "> Setting nice grub for Void ;)"
     sudo sed -i 's/^#GRUB_BACKGROUND/GRUB_BACKGROUND/' /etc/default/grub
     sudo grub-mkconfig -o /boot/grub/grub.cfg
-    box "Done"
+    box "Done \n"
 }
 
 ### Fstab ext4 tweaks ###
 set_fstab() {
-    box  "> Adding: noatime,commit=60 to fstab for ext4 / partition.."
+    boxf "> Adding: noatime,commit=60 to fstab for ext4 / partition.."
     sleep 2
     sudo sed -i '/^\S*\s\+\/\s/{s/defaults/&,noatime,commit=60/}' /etc/fstab
-    box "Done"
+    box "Done \n"
 }
 
 ### Install fonts ###
 install_fonts() {
-    box "> Installing some fonts.."
+    boxf "> Installing some fonts.."
     sleep 1
-    curl -L https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.0/Hack.zip -o Hack.zip
-    if [ ! -f Hack.zip ]; then
-		box "\e[1;31m! ERROR: Font download failed.."
-    else
-		unzip Hack.zip -d ./Hack
-		[ ! -d ~/.local/share/fonts/ ] && mkdir -p ~/.local/share/fonts/
-		mv ./Hack ~/.local/share/fonts/
-		rm Hack.zip
-		fc-cache -f
-		box "Done"
+    if fc-list | grep Hack >/dev/null; then 
+		box "! Hack already installed \n"
+	else
+		url -L https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.0/Hack.zip -o Hack.zip
+		if [ ! -f Hack.zip ]; then
+			box "\e[1;31m! ERROR: Font download failed.."
+		else
+			unzip Hack.zip -d ./Hack
+			[ ! -d ~/.local/share/fonts/ ] && mkdir -p ~/.local/share/fonts/
+			mv ./Hack ~/.local/share/fonts/
+			rm Hack.zip
+			fc-cache -f
+		box "Done \n"
+		fi
 	fi
 }
 
@@ -243,7 +246,7 @@ load_gnome_settings() {
 	echo $currentDE
 	case $currentDE in
 		"GNOME")
-			box "\e[1;31m> Next step will load GNOME settings, is this ok? [Y/N]"
+			boxf "\e[1;31m> Next step will load GNOME settings, is this ok? [Y/N]"
 			read -r accept
 			if [[ "$accept" == [Y/y] ]];
 			then
@@ -251,7 +254,7 @@ load_gnome_settings() {
 					box "> Loading gnome settings.."
 					sleep 1
 					dconf load /org/gnome/ < ./resources/gnome_settings
-					box "Done"
+					box "Done \n"
 				else
 					box "\e[1;31m! ERROR: dconf not found!"
 				fi
@@ -267,7 +270,7 @@ load_gnome_settings() {
 }
 
 load_dotfiles(){
-    box "\e[1;31m> Do you want to apply my dotfiles? [Y/N]"
+    boxf "\e[1;31m> Do you want to apply my dotfiles? [Y/N]"
     read -r accept
     if [[ "$accept" == [Y/y] ]]; then
 		git clone https://github.com/imatsatsos/dotfiles.git
@@ -283,37 +286,36 @@ load_dotfiles(){
 
 ###  MAIN  ###
 
-num_steps=13
+num_steps=12
 
 check_root
 opening
 check_deps
 
-box "(progress: 1/$num_steps)"
 disable_services
-box "(progress: 2/$num_steps)"
+box "(progress: 1/$num_steps)"
 disable_autostarts
-box "(progress: 3/$num_steps)"
+box "(progress: 2/$num_steps)"
 remove_packages
-box "(progress: 4/$num_steps)"
+box "(progress: 3/$num_steps)"
 set_modprobe_bl
-box "(progress: 5/$num_steps)"
+box "(progress: 4/$num_steps)"
 set_io_schedulers
-box "(progress: 6/$num_steps)"
+box "(progress: 5/$num_steps)"
 sv_intel_undervolt
-box "(progress: 7/$num_steps)"
+box "(progress: 6/$num_steps)"
 gaming_tweaks
-box "(progress: 8/$num_steps)"
+box "(progress: 7/$num_steps)"
 purge_kernels
-box "(progress: 9/$num_steps)"
+box "(progress: 8/$num_steps)"
 intel_microcode
-box "(progress: 10/$num_steps)"
+box "(progress: 9/$num_steps)"
 grub_commandline
-box "(progress: 11/$num_steps)"
+box "(progress: 10/$num_steps)"
 set_fstab
-box "(progress: 12/$num_steps)"
+box "(progress: 11/$num_steps)"
 install_fonts
-box "(progress: 13/$num_steps)"
+box "(progress: 12/$num_steps)"
 fix_blurry_fonts
 
 load_gnome_settings
