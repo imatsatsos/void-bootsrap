@@ -225,15 +225,20 @@ setup_fonts() {
     if fc-list | grep Hack >/dev/null; then 
 		box "! Hack already installed \n"
 	else
-		url -L https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.0/Hack.zip -o Hack.zip
-		if [ ! -f Hack.zip ]; then
-			box "\e[1;31m! ERROR: Font download failed.."
+		if command -v curl >/dev/null 2>&1; then
+			curl -L https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.0/Hack.zip -o Hack.zip
+			if [ ! -f Hack.zip ]; then
+				box "\e[1;31m! ERROR: Font download failed.."
+			else
+				unzip Hack.zip -d ./Hack
+				[ ! -d ~/.local/share/fonts/ ] && mkdir -p ~/.local/share/fonts/
+				mv ./Hack ~/.local/share/fonts/
+				rm Hack.zip
+				fc-cache -f
+			fi
 		else
-			unzip Hack.zip -d ./Hack
-			[ ! -d ~/.local/share/fonts/ ] && mkdir -p ~/.local/share/fonts/
-			mv ./Hack ~/.local/share/fonts/
-			rm Hack.zip
-			fc-cache -f
+			box "\e[1;31m! ERROR: curl not found!"
+			box "\e[1;31m! please install curl..!"
 		fi
 	fi
 	boxf "> Fixing blurry bitmap fonts.."
@@ -246,7 +251,7 @@ setup_fonts() {
 ### Load GNOME Settings ###
 load_gnome_settings() {
 	currentDE="$( echo $XDG_CURRENT_DESKTOP )"
-	echo $currentDE
+	echo "$currentDE detected."
 	case $currentDE in
 		"GNOME")
 			boxf "\e[1;31m> Next step will load GNOME settings, is this ok? [Y/N]"
@@ -298,36 +303,35 @@ opening
 check_deps
 
 disable_services
-box "(progress: 1/$num_steps)"
+box "[progress: 1/$num_steps]"
 disable_autostarts
-box "(progress: 2/$num_steps)"
+box "[progress: 2/$num_steps]"
 remove_packages
-box "(progress: 3/$num_steps)"
+box "(progress: 3/$num_steps]"
 set_modprobe_bl
 set_intel_optim
-box "(progress: 4/$num_steps)"
+box "[progress: 4/$num_steps]"
 set_io_schedulers
-box "(progress: 5/$num_steps)"
+box "[progress: 5/$num_steps]"
 sv_intel_undervolt
-box "(progress: 6/$num_steps)"
+box "[progress: 6/$num_steps]"
 gaming_tweaks
-box "(progress: 7/$num_steps)"
+box "[progress: 7/$num_steps]"
 purge_kernels
-box "(progress: 8/$num_steps)"
+box "[progress: 8/$num_steps]"
 intel_microcode
-box "(progress: 9/$num_steps)"
+box "[progress: 9/$num_steps]"
 grub_commandline
-box "(progress: 10/$num_steps)"
+box "[progress: 10/$num_step]"
 set_fstab
-box "(progress: 11/$num_steps)"
+box "[progress: 11/$num_steps]"
 setup_fonts
-box "(progress: 12/$num_steps)"
+box "[progress: 12/$num_steps]"
 load_gnome_settings
 load_dotfiles
 
 boxf "> Running a trim on all supported disks.."
 sudo fstrim -va
-box "Done \n"
 
 boxu "============= WE ARE DONE! =============="
 boxd "            Please reboot !!!            "
