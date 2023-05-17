@@ -203,7 +203,7 @@ intel_microcode() {
 grub_commandline() {
     boxf "> Grub mods: silence, speed-up, logo, disable mitigations, disable watchdog"
     sleep 1
-    sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&quiet loglevel=3 rd.udev.log_level=3 console=tty2 mitigations=off nowatchdog nmi_watchdog=0 /' /etc/default/grub
+    sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&quiet loglevel=3 rd.udev.log_level=3 console=tty2 mitigations=off nowatchdog nmi_watchdog=0 fbcon=nodefer /' /etc/default/grub
     sudo sed -i 's/GRUB_TIMEOUT.*/GRUB_TIMEOUT=1/' /etc/default/grub
     sudo sed -i 's/^#GRUB_BACKGROUND/GRUB_BACKGROUND/' /etc/default/grub
     sudo grub-mkconfig -o /boot/grub/grub.cfg
