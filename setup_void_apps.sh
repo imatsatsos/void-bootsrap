@@ -64,7 +64,7 @@ install_collection() {
 	read -r dm4
 	if [[ "$dm4" == [Y/y] ]]; then
 		sudo xbps-install -Sy alacritty geany htop neovim mpv yt-dlp ffmpeg easyeffects lutris fzf
-		sudo xbps-install -y curl git xmirror xrandr xinput intel-undervolt intel-gpu-tools glxinfo libva-utils
+		sudo xbps-install -y curl git xmirror xrandr xinput intel-undervolt intel-gpu-tools nvtop glxinfo libva-utils
 		boxg "Collection installed!"; echo ""
 	fi
 }
@@ -85,6 +85,7 @@ install_collection() {
 # xinput > used to fix my touchpad scroll speed
 # intel-undervolt > undervolt intel CPUs
 # intel-gpu-tools > mainly for itop (intel gpu monitor)
+# nvtop           > monitor for nvidia intel amd gpus
 # glxinfo > cli util to verify gpu drivers
 # libva-utils > cli util to verify vaapi support
 
