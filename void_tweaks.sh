@@ -101,20 +101,11 @@ disable_autostarts() {
     [ ! -f ${USER_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop ] 			&& cp -v ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop 	${USER_AUTOSTART}
     echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop
     [ ! -f ${USER_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ] 	&& cp -v ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ${USER_AUTOSTART}
-    echo "Hidden=true" >> ~${USER_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop
+    echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop
     [ ! -f ${USER_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop ] 		&& cp -v ${SYS_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop 	${USER_AUTOSTART}
     echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop
     #[ ! -f ~/.config/autostart/tracker-miner-fs-3.desktop ] && cp -v /etc/xdg/autostart/tracker-miner-fs-3.desktop ~/.config/autostart/
     #echo "Hidden=true" >> ~/.config/autostart/tracker-miner-fs-3.desktop
-    box "Done \n"
-}
-
-### Fix blurry fonts ###
-fix_blurry_fonts() {
-    boxf "> Fixing blurry bitmap fonts.."
-    sleep 2
-    [ ! -f /etc/fonts/conf.d/70-no-bitmaps.conf ] &&  sudo ln -sv /usr/share/fontconfig/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d/
-    sudo xbps-reconfigure -f fontconfig
     box "Done \n"
 }
 
@@ -228,7 +219,7 @@ set_fstab() {
 }
 
 ### Install fonts ###
-install_fonts() {
+setup_fonts() {
     boxf "> Installing some fonts.."
     sleep 1
     if fc-list | grep Hack >/dev/null; then 
@@ -243,9 +234,13 @@ install_fonts() {
 			mv ./Hack ~/.local/share/fonts/
 			rm Hack.zip
 			fc-cache -f
-		box "Done \n"
 		fi
 	fi
+	boxf "> Fixing blurry bitmap fonts.."
+    sleep 2
+    [ ! -f /etc/fonts/conf.d/70-no-bitmaps.conf ] &&  sudo ln -sv /usr/share/fontconfig/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d/
+    sudo xbps-reconfigure -f fontconfig
+    box "Done \n"
 }
 
 ### Load GNOME Settings ###
@@ -325,10 +320,8 @@ grub_commandline
 box "(progress: 10/$num_steps)"
 set_fstab
 box "(progress: 11/$num_steps)"
-install_fonts
+setup_fonts
 box "(progress: 12/$num_steps)"
-fix_blurry_fonts
-
 load_gnome_settings
 load_dotfiles
 
