@@ -257,6 +257,8 @@ load_gnome_settings() {
 				else
 					box "\e[1;31m! ERROR: dconf not found!"
 				fi
+				[ ! -d ~/.config/autostart/ ] && mkdir -p ~/.config/autostart/
+				sudo cp -vf ./resources/myonlogin.desktop ~/.config/autostart/
 			else
 				box "> That's ok, you want to make it your own!"
 				exit
