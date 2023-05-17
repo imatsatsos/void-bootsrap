@@ -18,6 +18,7 @@
 # intel-video-accel > intel gpu driver + hw accel codecs
 # mesa-intel-dri 	> mesa support for intel gpu
 # mesa-vulkan-intel > vulkan intel driver
+# nvidia            > nvidia driver
 # xdg-utils 		> basic XDG support (xdg-open, etc..)
 # xdg-user-dirs 	> XDG support for /downloads, /documents, etc..
 # gnome-core 		> minimal gnome DE
@@ -41,6 +42,19 @@ PKGS="$COMMON $VGA"
 
 echo -e "\e[1;32m Is this a VM?  [Y/N]"
 read -r flag_vm
+# Install VM drivers [MORE TEST NEEDED]
+if [[ "$flag_vm" == [Y/y] ]]; then
+	VGA="mesa-dri xf86-video-qxl"
+	PKGS="$COMMON $VGA"
+fi
+
+echo -e "\e[1;32m Do you want to install NVIDIA drivers?  [Y/N]"
+read -r flag_nvidia
+# Install NVIDIA drivers [MORE TEST NEEDED]
+if [[ "$flag_nvidia" == [Y/y] ]]; then
+	VGA="$VGA nvidia"
+	PKGS="$COMMON $VGA"
+fi
 
 echo -e "\e[1;32m Choose a variant:"
 echo -e "\e[1;32m 1: GNOME"
@@ -59,13 +73,6 @@ echo -e "\e[1;32m  Updating system and xbps package manager..\e[0m"; sleep 3
 sudo xbps-install -Suy
 sudo xbps-install -uy xbps
 sudo xbps-install -Suy
-
-
-# Install VM drivers [MORE TEST NEEDED]
-if [[ "$flag_vm" == [Y/y] ]]; then
-	VGA="mesa-dri xf86-video-qxl"
-	PKGS="$COMMON $VGA"
-fi
 
 
 case $variant in

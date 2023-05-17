@@ -35,7 +35,7 @@ install_steam() {
 		box "Will you use an Nvidia GPU for Steam?  [Y/N]"
 		read -r dm2
 		if [[ "$dm2" == [Y/y] ]]; then
-			sudo xbps-install -Sy nvidia-libs-32bit
+			sudo xbps-install -y nvidia-libs-32bit
 		fi
 		boxg "Steam installed!"; echo ""
 	fi
