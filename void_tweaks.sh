@@ -150,7 +150,7 @@ sv_intel_undervolt() {
     boxf "> Creating intel-undervolt service and setting undervolt conf.."
     sleep 2
     sudo xbps-install -y intel-undervolt
-    [ ! -f /etc/intel-undervolt.conf  ] &&  sudo cp ./resources/intel-undervolt.conf /etc/intel-undervolt.conf
+    sudo cp ./resources/intel-undervolt.conf /etc/intel-undervolt.conf
     if [ -d "/etc/sv/intel-undervolt/"  ]; then
 		box "! intel-undervolt service already configured \n"
 	else
