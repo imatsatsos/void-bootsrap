@@ -22,6 +22,7 @@ xkb-options=@as []
 [desktop/interface]
 clock-show-weekday=true
 color-scheme='prefer-dark'
+cursor-size=32
 document-font-name='Cantarell 11'
 enable-animations=true
 font-antialiasing='rgba'
@@ -56,6 +57,9 @@ remove-old-trash-files=true
 [desktop/search-providers]
 sort-order=['org.gnome.Contacts.desktop', 'org.gnome.Documents.desktop', 'org.gnome.Nautilus.desktop']
 
+[desktop/session]
+idle-delay=uint32 300
+
 [desktop/wm/keybindings]
 close=['<Super>q']
 move-to-monitor-left=@as []
@@ -83,6 +87,7 @@ workspace-names=@as []
 
 [eog/ui]
 image-gallery=true
+sidebar=false
 statusbar=false
 
 [eog/view]
@@ -91,6 +96,9 @@ interpolate=false
 
 [mutter]
 dynamic-workspaces=true
+
+[nautilus/compression]
+default-compression-format='7z'
 
 [nautilus/list-view]
 default-zoom-level='medium'
