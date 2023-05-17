@@ -145,6 +145,15 @@ set_modprobe_bl() {
     box "Done \n"
 }
 
+### Optimized Intel Graphics with modprobe
+set_intel_optim() {
+	boxf "> Optimizing Intel Graphics.."
+	sleep 2
+	[ ! -d /etc/modprobe.d/ ] && mkdir -p /etc/modprobe.d/
+	sudo cp -v ./resources/intel-graphics.conf /etc/modprobe.d/intel-graphics.conf
+	box "Done \n"
+}
+
 ### Create intel-undervolt service ###
 sv_intel_undervolt() {
     boxf "> Creating intel-undervolt service and setting undervolt conf.."
@@ -300,6 +309,7 @@ box "(progress: 2/$num_steps)"
 remove_packages
 box "(progress: 3/$num_steps)"
 set_modprobe_bl
+set_intel_optim
 box "(progress: 4/$num_steps)"
 set_io_schedulers
 box "(progress: 5/$num_steps)"
