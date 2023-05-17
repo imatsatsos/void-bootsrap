@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=/home/john/bin/onlogin.sh
+Exec=/home/john/.local/bin/onlogin.sh
 Icon=terminal
 Terminal=false
 Categories=System
