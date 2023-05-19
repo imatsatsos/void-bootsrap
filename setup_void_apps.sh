@@ -64,7 +64,7 @@ install_collection() {
 	read -r dm4
 	if [[ "$dm4" == [Y/y] ]]; then
 		sudo xbps-install -Sy alacritty geany htop neovim mpv yt-dlp ffmpeg easyeffects lutris fzf
-		sudo xbps-install -y curl git xmirror xrandr xinput intel-undervolt intel-gpu-tools nvtop glxinfo libva-utils
+		sudo xbps-install -y curl git xmirror xrandr xinput intel-undervolt intel-gpu-tools nvtop MangoHud glxinfo libva-utils
 		boxg "Collection installed!"; echo ""
 	fi
 }
@@ -88,6 +88,7 @@ install_collection() {
 # nvtop           > monitor for nvidia intel amd gpus
 # glxinfo > cli util to verify gpu drivers
 # libva-utils > cli util to verify vaapi support
+# MangoHud > MSI-afterburner like ingame OSD
 
 install_virtmanager() {
 	box "Do you want to: Install KVM (virt-manager)?  [Y/N]"

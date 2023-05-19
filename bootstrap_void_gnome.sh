@@ -52,7 +52,7 @@ echo -e "\e[1;32m Do you want to install NVIDIA drivers?  [Y/N]"
 read -r flag_nvidia
 # Install NVIDIA drivers [MORE TEST NEEDED]
 if [[ "$flag_nvidia" == [Y/y] ]]; then
-	VGA="$VGA nvidia"
+	VGA="$VGA nvidia nvidia-vaapi-driver"
 	PKGS="$COMMON $VGA"
 fi
 
