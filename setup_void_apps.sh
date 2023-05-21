@@ -5,6 +5,15 @@
 # Description:	This script install's my preferred applications in an interactive way         #
 ###############################################################################################
 
+PKGS_REPOS="void-repo-nonfree void-repo-multilib{,-nonfree}"
+PKGS_STEAM="steam libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit mesa-dri-32bit"
+PKGS_STEAM_NVIDIA="nvidia-libs-32bit"
+
+PKGS_GUI="alacritty geany neovim mpv easyeffects"
+PKGS_CLI="curl git htop fzf xmirror xrandr xinput intel-undervolt ffmpeg yt-dlp"
+PKGS_UTILS="intel-gpu-tools nvtop glxinfo libva-utils x-eyes"
+PKGS_3D="MangoHud lutris"
+PKGS_SUM="$PKGS_GUI $PKGS_CLI $PKGS_UTILS $PKGS_3D"
 
 box() {
     title=" $1 "
@@ -30,14 +39,15 @@ install_steam() {
 	box "Do you want to: Install Steam?  [Y/N]"
 	read -r dm1
 	if [[ "$dm1" == [Y/y] ]]; then
-		sudo xbps-install -Sy void-repo-nonfree void-repo-multilib{,-nonfree}
-		sudo xbps-install -Sy steam libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit mesa-dri-32bit
 		box "Will you use an Nvidia GPU for Steam?  [Y/N]"
 		read -r dm2
-		if [[ "$dm2" == [Y/y] ]]; then
-			sudo xbps-install -y nvidia-libs-32bit
+		sudo xbps-install -Sy "$PKGS_REPOS"
+		if [[ "$dm2" == [N/n] ]]; then
+			sudo xbps-install -Sy "$PKGS_STEAM"
+			else
+			sudo xbps-install -Sy "$PKGS_STEAM $PKGS_STEAM_NVIDIA"
 		fi
-		boxg "Steam installed!"; echo ""
+		boxg "Steam installed!\n"
 	fi
 }
 
@@ -49,7 +59,7 @@ install_flatpak() {
 		if command -v flatpak >/dev/null 2>&1; then
 			flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo; sleep 0.5
 			flatpak update --appstream
-			boxg "Flatpak installed!"; echo ""
+			boxg "Flatpak installed!\n"
 		else
 			box "! ERROR: Something went wrong .."
 		fi
@@ -59,13 +69,11 @@ install_flatpak() {
 
 install_collection() {
 	box "Do you want to: Install Collection?   [Y/N]"
-	box "(alacritty, geany, htop, neovim, mpv, yt-dlp, easyeffects, lutris, fzf, curl"
-	box " git, xmirror, xrandr, xinput, intel-undervolt, intel-gpu-tools, glxinfo, libva-utils)"
+	box "$( echo $PKGS_SUM )"
 	read -r dm4
 	if [[ "$dm4" == [Y/y] ]]; then
-		sudo xbps-install -Sy alacritty geany htop neovim mpv yt-dlp ffmpeg easyeffects lutris fzf
-		sudo xbps-install -y curl git xmirror xrandr xinput intel-undervolt intel-gpu-tools nvtop MangoHud glxinfo libva-utils
-		boxg "Collection installed!"; echo ""
+		sudo xbps-install -Sy "$PKGS_SUM"
+		boxg "Collection installed!\n"
 	fi
 }
 # alacritty > terminal
@@ -98,7 +106,7 @@ install_virtmanager() {
 		sudo ln -s /etc/sv/libvirtd/ /var/service/
 		sudo ln -s /etc/sv/virtlogd/ /var/service/
 		sudo usermod -a -G libvirt $(whoami)
-		boxg "Virt-manager installed!"; echo ""
+		boxg "Virt-manager installed!\n"
 	fi
 }
 
