@@ -113,7 +113,7 @@ case $variant in
 esac	
 
 
-echo -e "e[1;31m> Almost done now. Are you here?.. (press any key)\e[0m"; read -r blabla
+echo -e "\e[1;31m> Almost done now. Are you here?.. (press any key)\e[0m"; read -r blabla
 # Set up wireplumber
 echo -e "\e[1;32m> Setting up wireplumber session manager..\e[0m"; sleep 3
 if command -v pipewire >/dev/null 2>&1 && command -v wireplumber >/dev/null 2>&1; then
@@ -140,8 +140,8 @@ sudo ln -s /etc/sv/NetworkManager /var/service/
 
 
 echo -e "\e[1;32m------------- DONE! -------------\e[0m"; sleep 3
-if [["$variant" -eq 3 ]]; then
-	echo -e "\e[32mYou use suckless, you know how to proceed. ;)\e[0m"
+if [[ $variant -eq 3 ]]; then
+	echo -e "\e[1;32mYou use suckless, you know how to proceed. ;)\e[0m"
 else
 	sudo ln -s "/etc/sv/$DM" /var/service
 	echo -e "   \e[1;32m$DM will start shortly.\e[0m"
