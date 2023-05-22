@@ -41,7 +41,7 @@ VGA="mesa-dri intel-video-accel mesa-intel-dri mesa-vulkan-intel"
 PKGS="$COMMON $VGA"
 
 echo -e "\e[1;32m Is this a VM?  [Y/N]"
-read -r flag_vm
+read flag_vm
 # Install VM drivers [MORE TEST NEEDED]
 if [[ "$flag_vm" == [Y/y] ]]; then
 	VGA="mesa-dri xf86-video-qxl"
@@ -49,7 +49,7 @@ if [[ "$flag_vm" == [Y/y] ]]; then
 fi
 
 echo -e "\e[1;32m Do you want to install NVIDIA drivers?  [Y/N]"
-read -r flag_nvidia
+read flag_nvidia
 # Install NVIDIA drivers [MORE TEST NEEDED]
 if [[ "$flag_nvidia" == [Y/y] ]]; then
 	VGA="$VGA nvidia nvidia-vaapi-driver"
@@ -60,7 +60,7 @@ echo -e "\e[1;32m Choose a variant:"
 echo -e "\e[1;32m 1: GNOME"
 echo -e "\e[1;32m 2: PLASMA"
 echo -e "\e[1;32m 3: DWM"
-read -r "number: " variant
+read -p "number: " variant
 
 
 echo -e "\e[1;32m  This will take some time, go grab a coffee!\e[0m"; sleep 3
