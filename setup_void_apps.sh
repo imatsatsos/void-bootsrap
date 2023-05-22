@@ -17,12 +17,18 @@ PKGS_SUM="$PKGS_GUI $PKGS_CLI $PKGS_UTILS $PKGS_3D"
 
 box() {
     title=" $1 "
-    echo -e "\e[1;31m$title\e[0m"
+    echo -e "\e[1;33m$title\e[0m"
 }
+
 boxg(){
 	title=" $1 "
 	echo -e "\e[1;32m$title\e[0m"
- }
+}
+
+boxr(){
+    title=" $1 "
+    echo -e "\e[1;31m$title\e[0m"
+}
  
 menu() {
 	box "Welcome! This script will help you get your apps installed faf."
@@ -61,7 +67,7 @@ install_flatpak() {
 			flatpak update --appstream
 			boxg "Flatpak installed!\n"
 		else
-			box "! ERROR: Something went wrong .."
+			boxr "! ERROR: Something went wrong .."
 		fi
 	## TODO: menu for some of my flatpaks
 	fi

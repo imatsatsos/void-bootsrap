@@ -60,7 +60,7 @@ echo -e "\e[1;32m Choose a variant:"
 echo -e "\e[1;32m 1: GNOME"
 echo -e "\e[1;32m 2: PLASMA"
 echo -e "\e[1;32m 3: DWM"
-read -r "number: "variant
+read -r "number: " variant
 
 
 echo -e "\e[1;32m  This will take some time, go grab a coffee!\e[0m"; sleep 3
