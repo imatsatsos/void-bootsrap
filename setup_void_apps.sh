@@ -11,7 +11,7 @@ PKGS_STEAM_NVIDIA="nvidia-libs-32bit"
 
 PKGS_GUI="alacritty geany neovim mpv easyeffects"
 PKGS_CLI="curl git htop fzf xmirror xrandr xinput intel-undervolt ffmpeg yt-dlp"
-PKGS_UTILS="intel-gpu-tools nvtop glxinfo libva-utils x-eyes"
+PKGS_UTILS="intel-gpu-tools nvtop glxinfo libva-utils xeyes"
 PKGS_3D="MangoHud lutris"
 PKGS_SUM="$PKGS_GUI $PKGS_CLI $PKGS_UTILS $PKGS_3D"
 
