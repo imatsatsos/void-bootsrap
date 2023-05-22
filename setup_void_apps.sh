@@ -47,11 +47,11 @@ install_steam() {
 	if [[ "$dm1" == [Y/y] ]]; then
 		box "Will you use an Nvidia GPU for Steam?  [Y/N]"
 		read -r dm2
-		sudo xbps-install -Sy "$PKGS_REPOS"
+		sudo xbps-install -Sy $PKGS_REPOS
 		if [[ "$dm2" == [N/n] ]]; then
-			sudo xbps-install -Sy "$PKGS_STEAM"
+			sudo xbps-install -Sy $PKGS_STEAM
 			else
-			sudo xbps-install -Sy "$PKGS_STEAM $PKGS_STEAM_NVIDIA"
+			sudo xbps-install -Sy $PKGS_STEAM $PKGS_STEAM_NVIDIA
 		fi
 		boxg "Steam installed!\n"
 	fi
@@ -78,7 +78,7 @@ install_collection() {
 	box "$( echo $PKGS_SUM )"
 	read -r dm4
 	if [[ "$dm4" == [Y/y] ]]; then
-		sudo xbps-install -Sy "$PKGS_SUM"
+		sudo xbps-install -Sy $PKGS_SUM
 		boxg "Collection installed!\n"
 	fi
 }
