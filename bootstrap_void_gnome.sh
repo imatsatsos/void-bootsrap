@@ -78,7 +78,7 @@ sudo xbps-install -Suy
 case $variant in
 	# 1: GNOME
 	1)
-		PKGS="$PKGS NetworkManager gnome-core eog gnome-tweaks dconf-editor alacritty"
+		PKGS="$PKGS NetworkManager gnome-core power-profiles-daemon eog gnome-tweaks dconf-editor alacritty"
 		DM="gdm"
 		echo -e "\e[1;32m  Minimal GNOME DE installation..\e[0m"; sleep 3
 		sudo xbps-install -y $PKGS
@@ -137,7 +137,9 @@ sudo rm -v /var/service/sshd
 echo -e "\e[1;32m  Enabling services: dbus, NetworkManager..\e[0m"; sleep 3
 sudo ln -s /etc/sv/dbus /var/service/
 sudo ln -s /etc/sv/NetworkManager /var/service/
-
+if [[ $variant -eq 3 ]]; then
+	sudo ln -s /etc/sv/power-profiles-daemon /var/service/
+fi
 
 echo -e "\e[1;32m------------- DONE! -------------\e[0m"; sleep 3
 if [[ $variant -eq 3 ]]; then
