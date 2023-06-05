@@ -127,6 +127,15 @@ set_io_schedulers() {
     box "Done \n"
 }
 
+### Set ntfs3 kernel mod for default ntfs mounting
+set_ntfs3() {
+	boxf "> Setting ntfs3 by default.."
+    sleep 2
+    [ ! -d /etc/udev/rules.d/ ] && sudo mkdir -p /etc/udev/rules.d/
+    sudo cp -v ./resources/ntfs3_default.rules /etc/udev/rules.d/ntfs3_default.rules
+    box "Done \n"
+}
+
 ### Set modprobe blacklist ###
 set_modprobe_bl() {
     boxf "> Setting modprobe.."
@@ -171,6 +180,9 @@ gaming_tweaks() {
     # enable Esync
     sleep 1.5
     echo "$(whoami) hard nofile 524288" | sudo tee -a /etc/security/limits.conf
+    sleep 1.5
+    boxf "> Enabling MangoHud CPU (Intel) Power access.."
+    sudo chmod o+r /sys/class/powercap/intel-rapl\:0/energy_uj
     box "Done \n"
 }
 
@@ -313,6 +325,7 @@ set_modprobe_bl
 set_intel_optim
 box "[progress: 4/$num_steps]"
 set_io_schedulers
+set_ntfs3
 box "[progress: 5/$num_steps]"
 sv_intel_undervolt
 box "[progress: 6/$num_steps]"
