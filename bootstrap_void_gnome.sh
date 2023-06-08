@@ -3,7 +3,7 @@
 ###############################################################################################
 # Author: imatsatsos                                                                          #
 # Description: This script setups Void Linux for Intel systems. It provides the user a choice #
-#    to install a minimal GNOME, PLASMA or SUCKLESS (DWM) setup, enables basic services and   #
+#    to install a minimal GNOME, PLASMA, i3, or SUCKLESS (DWM) setup, enables basic services and   #
 #    finally provides to install drivers in case the system will be used inside a VM.         #
 ###############################################################################################
 
@@ -39,6 +39,11 @@
 COMMON="intel-ucode xorg-minimal dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber rtkit bluez gvfs"
 VGA="mesa-dri intel-video-accel mesa-intel-dri mesa-vulkan-intel"
 PKGS="$COMMON $VGA"
+
+PKGS_GNOME="NetworkManager gnome-core power-profiles-daemon eog gnome-tweaks dconf-editor alacritty"
+PKGS_PLASMA="kde5 dolphin konsole"
+PKGS_DWM="base-devel xst dejavu-fonts-ttf libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel xrandr"
+PKGS_I3="NetworkManager lxappearance power-profiles-dameon xst i3 i3blocks i3lock xwallpaper xrandr sysstat polkit-gnome gettext"
 
 echo -e "\e[1;32m Is this a VM?  [Y/N]"
 read flag_vm
@@ -78,7 +83,7 @@ sudo xbps-install -Suy
 case $variant in
 	# 1: GNOME
 	1)
-		PKGS="$PKGS NetworkManager gnome-core power-profiles-daemon eog gnome-tweaks dconf-editor alacritty"
+		PKGS="$PKGS $PKGS_GNOME"
 		DM="gdm"
 		echo -e "\e[1;32m  Minimal GNOME DE installation..\e[0m"; sleep 3
 		sudo xbps-install -y $PKGS
@@ -86,7 +91,7 @@ case $variant in
 	
 	# 2: PLASMA
 	2)
-		PKGS="$PKGS kde5 dolphin konsole"
+		PKGS="$PKGS $PKGS_PLASMA"
 		DM="sddm"
 		echo -e "\e[1;32m  Minimal PLASMA DE installation..\e[0m"; sleep 3
 		sudo xbps-install -y $PKGS
@@ -95,7 +100,7 @@ case $variant in
 	# 3: DWM (suckless)
 	3)
 		echo -e "\e[1;32m Suckless DWM dependencies installation..\e[0m"; sleep 3
-		PKGS="$PKGS base-devel dejavu-fonts-ttf libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel xrandr"
+		PKGS="$PKGS $PKGS_DWM"
 		## for dwm 
 		# xrandr picom xwallpaper thunar git
 		sudo xbps-install -y $PKGS
@@ -105,8 +110,15 @@ case $variant in
 		# setup .xinitrc
 		# startx
 	;;
+    
+    # 4: I3
+    4)
+        echo -e "\e[1;32m Minimal i3 installation..\e[0m"; sleep 3
+        PKGS="$PKGS $PKGS_I3"
+        sudo xbps-install -y $PKGS
+    ;;
 	
-	*)
+    *)
 		echo -e "\e[1;31mInvalid variant.\e[0m"
 		exit 1
 	;;
