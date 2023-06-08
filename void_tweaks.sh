@@ -147,7 +147,7 @@ set_modprobe_bl() {
 
 ### Set xorg confs (mouse accel, touchpad, etc)
 set_xorg_conf() {
-    boxf"> Setting xorg.conf.d"
+    boxf "> Setting xorg.conf.d"
     sleep 2
     [ ! -d /etc/X11/xorg.conf.d ] && mkdir -p /etc/X11/xorg.conf.d/
     sudo cp -v ./resources/{70-synaptics.conf,71-mouse-accel.conf} /etc/X11/xorg.conf.d/
@@ -346,7 +346,7 @@ box "[progress: 8/$num_steps]"
 intel_microcode
 box "[progress: 9/$num_steps]"
 grub_commandline
-box "[progress: 10/$num_step]"
+box "[progress: 10/$num_steps]"
 set_fstab
 box "[progress: 11/$num_steps]"
 setup_fonts
