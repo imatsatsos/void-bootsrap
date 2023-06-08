@@ -149,7 +149,7 @@ set_modprobe_bl() {
 set_xorg_conf() {
     boxf "> Setting xorg.conf.d"
     sleep 2
-    [ ! -d /etc/X11/xorg.conf.d ] && mkdir -p /etc/X11/xorg.conf.d/
+    [ ! -d /etc/X11/xorg.conf.d ] && sudo mkdir -p /etc/X11/xorg.conf.d/
     sudo cp -v ./resources/{70-synaptics.conf,71-mouse-accel.conf} /etc/X11/xorg.conf.d/
     box "Done \n"
 }
