@@ -54,12 +54,14 @@ if [[ "$flag_vm" == [Y/y] ]]; then
 	PKGS="$COMMON $VGA"
 fi
 
-echo -e "\e[1;32m Do you want to install NVIDIA drivers?  [Y/N]"
-read flag_nvidia
-# Install NVIDIA drivers [MORE TEST NEEDED]
-if [[ "$flag_nvidia" == [Y/y] ]]; then
-	VGA="$VGA nvidia nvidia-vaapi-driver"
-	PKGS="$COMMON $VGA"
+if [[ "$flag_vm" ~= [Y/y] ]]; then
+	echo -e "\e[1;32m Do you want to install NVIDIA drivers?  [Y/N]"
+	read flag_nvidia
+	# Install NVIDIA drivers [MORE TEST NEEDED]
+	if [[ "$flag_nvidia" == [Y/y] ]]; then
+		VGA="$VGA nvidia nvidia-vaapi-driver"
+		PKGS="$COMMON $VGA"
+	fi
 fi
 
 echo -e "\e[1;32m Choose a variant:"
@@ -164,7 +166,8 @@ echo -e "\e[1;32m------------- DONE! -------------\e[0m"; sleep 3
 if [[ $variant -eq 3 ]]; then
 	echo -e "\e[1;32mYou use suckless, you know how to proceed. ;)\e[0m"
 elif [[ $variant -eq 4 ]]; then
-	echo "exec dbus-run-session /usr/bin/i3" > .xinitrc
+	echo "exec dbus-run-session /usr/bin/i3" > /home/$USER/.xinitrc
+	echo -e "   \e[1;32m$.xinitrc for i3 created, run startx!\e[0m"
 else
 	sudo ln -s "/etc/sv/$DM" /var/service
 	echo -e "   \e[1;32m$DM will start shortly.\e[0m"
