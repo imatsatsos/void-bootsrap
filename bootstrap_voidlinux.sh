@@ -47,9 +47,10 @@ PKGS_I3="NetworkManager lxappearance power-profiles-daemon xst i3 i3blocks i3loc
 
 echo -e "\e[1;32m Is this a VM?  [Y/N]"
 read flag_vm
-# Install VM drivers [MORE TEST NEEDED]
+# Fewer pkgs and VM drivers [MORE TEST NEEDED]
 if [[ "$flag_vm" == [Y/y] ]]; then
 	VGA="mesa-dri xf86-video-qxl"
+	COMMON="xorg-minimal dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber rtkit gvfs"
 	PKGS="$COMMON $VGA"
 fi
 
@@ -147,7 +148,7 @@ echo -e "\e[1;32m  Disabling services: wpa_supplicant, dhcpcd, sshd..\e[0m"; sle
 #sudo rm -v /var/service/wpa_supplicant
 #sudo rm -v /var/service/dhcpcd
 #sudo rm -v /var/service/sshd
-if [[ "$flag_vm" == "Y/y"]]; then
+if [[ "$flag_vm" == [Y/y] ]]; then
 	sudo rm -v /var/service/{wpa_supplicant,sshd}
 else
 	sudo rm -v /var/service/{wpa_supplicant,dhcpcd,sshd}
