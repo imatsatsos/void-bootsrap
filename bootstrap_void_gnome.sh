@@ -131,12 +131,13 @@ fi
 
 # Services
 echo -e "\e[1;32m  Disabling services: wpa_supplicant, dhcpcd, sshd..\e[0m"; sleep 3
-sudo rm -v /var/service/wpa_supplicant
-sudo rm -v /var/service/dhcpcd
-sudo rm -v /var/service/sshd
+#sudo rm -v /var/service/wpa_supplicant
+#sudo rm -v /var/service/dhcpcd
+#sudo rm -v /var/service/sshd
+sudo rm -v /var/service/{wpa_supplicant,dhcpcd,sshd}
 echo -e "\e[1;32m  Enabling services: dbus, NetworkManager..\e[0m"; sleep 3
-sudo ln -s /etc/sv/dbus /var/service/
-sudo ln -s /etc/sv/NetworkManager /var/service/
+sudo ln -s /etc/sv/{dbus,NetworkManager} /var/service/
+#sudo ln -s /etc/sv/NetworkManager /var/service/
 if [[ $variant -eq 3 ]]; then
 	sudo ln -s /etc/sv/power-profiles-daemon /var/service/
 fi

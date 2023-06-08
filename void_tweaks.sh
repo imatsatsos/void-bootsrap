@@ -145,6 +145,15 @@ set_modprobe_bl() {
     box "Done \n"
 }
 
+### Set xorg confs (mouse accel, touchpad, etc)
+set_xorg_conf() {
+    boxf"> Setting xorg.conf.d"
+    sleep 2
+    [ ! -d /etc/X11/xorg.conf.d ] && mkdir -p /etc/X11/xorg.conf.d/
+    sudo cp -v ./resources/{70-synaptics.conf,71-mouse-accel.conf} /etc/X11/xorg.conf.d/
+    box "Done \n"
+}
+
 ### Optimized Intel Graphics with modprobe
 set_intel_optim() {
 	boxf "> Optimizing Intel Graphics.."
@@ -324,6 +333,7 @@ box "(progress: 3/$num_steps]"
 set_modprobe_bl
 set_intel_optim
 box "[progress: 4/$num_steps]"
+set_xorg_conf
 set_io_schedulers
 set_ntfs3
 box "[progress: 5/$num_steps]"
