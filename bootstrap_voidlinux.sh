@@ -54,7 +54,7 @@ if [[ "$flag_vm" == [Y/y] ]]; then
 	PKGS="$COMMON $VGA"
 fi
 
-if [[ "$flag_vm" ~= [Y/y] ]]; then
+if [[ "$flag_vm" != [Y/y] ]]; then
 	echo -e "\e[1;32m Do you want to install NVIDIA drivers?  [Y/N]"
 	read flag_nvidia
 	# Install NVIDIA drivers [MORE TEST NEEDED]
