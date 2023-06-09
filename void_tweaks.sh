@@ -53,7 +53,7 @@ opening() {
     then
         box "OK! Lets get started! \n"
     else
-        box "That's ok, thanks for checking out this script \n"
+        box "That's ok, thanks for checking out this scripti. \n"
         exit
     fi
 }
@@ -92,7 +92,7 @@ disable_services() {
 
 ### Disable autostarts, mainly gnome ###
 disable_autostarts() {    
-    boxf "> Disabling useless autostarts.."
+    boxf "> Disabling useless autostarts (.desktop).."
     sleep 2
     SYS_AUTOSTART="/etc/xdg/autostart/"; USER_AUTOSTART="~/.config/autostart/";
     [ ! -d ${USER_AUTOSTART} ] &&  mkdir -p ${USER_AUTOSTART}
@@ -121,6 +121,7 @@ remove_packages() {
 ### Set io-schedulers ###
 set_io_schedulers() {
     boxf "> Setting io-schedulers.."
+    box "bfq for HDD/SSD, none for NVMe"
     sleep 2
     [ ! -d /etc/udev/rules.d/ ] && sudo mkdir -p /etc/udev/rules.d/
     sudo cp -v ./resources/60-ioschedulers.rules /etc/udev/rules.d/60-ioschedulers.rules
@@ -129,7 +130,7 @@ set_io_schedulers() {
 
 ### Set ntfs3 kernel mod for default ntfs mounting
 set_ntfs3() {
-	boxf "> Setting ntfs3 by default.."
+	boxf "> Setting ntfs3 kernel by default.."
     sleep 2
     [ ! -d /etc/udev/rules.d/ ] && sudo mkdir -p /etc/udev/rules.d/
     sudo cp -v ./resources/ntfs3_default.rules /etc/udev/rules.d/ntfs3_default.rules
@@ -145,18 +146,18 @@ set_modprobe_bl() {
     box "Done \n"
 }
 
-### Set xorg confs (mouse accel, touchpad, etc)
+### Set xorg confs (mouse accel, touchpad, benq-res, etc)
 set_xorg_conf() {
-    boxf "> Setting xorg.conf.d"
+    boxf "> Setting xorg.conf.d.."
     sleep 2
     [ ! -d /etc/X11/xorg.conf.d ] && sudo mkdir -p /etc/X11/xorg.conf.d/
-    sudo cp -v ./resources/{70-synaptics.conf,71-mouse-accel.conf} /etc/X11/xorg.conf.d/
+    sudo cp -v ./resources/{10-xl2411z-customres.conf,70-synaptics.conf,71-mouse-accel.conf} /etc/X11/xorg.conf.d/
     box "Done \n"
 }
 
 ### Optimized Intel Graphics with modprobe
 set_intel_optim() {
-	boxf "> Optimizing Intel Graphics.."
+	boxf "> Optimizing Intel Graphics with modprobe.."
 	sleep 2
 	[ ! -d /etc/modprobe.d/ ] && mkdir -p /etc/modprobe.d/
 	sudo cp -v ./resources/intel-graphics.conf /etc/modprobe.d/intel-graphics.conf
@@ -296,7 +297,7 @@ load_gnome_settings() {
 			fi
 			;;
 		*)
-		box "\e[1;31m Unsupported DE/WM"
+		box "\e[1;31m Skipping GNOME settings load.."
 			;;
 	esac
 }
@@ -307,8 +308,8 @@ load_dotfiles(){
     if [[ "$accept" == [Y/y] ]]; then
 		git clone https://github.com/imatsatsos/dotfiles.git
 		if [ -d dotfiles/ ]; then
-			chmod a+x ./dotfiles/setup_bash.sh
-			source ./dotfiles/setup_bash.sh
+			chmod a+x ./dotfiles/setup_dots.sh
+			source ./dotfiles/setup_dots.sh
 			#rm -rf ./dotfiles/
 		else
 			box "\e[1;31m! ERROR: git clone failed!"
@@ -318,7 +319,8 @@ load_dotfiles(){
 
 ###  MAIN  ###
 
-num_steps=12
+num_steps=17
+indx=1
 
 check_root
 opening
@@ -326,35 +328,57 @@ check_deps
 
 disable_services
 box "[progress: 1/$num_steps]"
+
 disable_autostarts
 box "[progress: 2/$num_steps]"
+
 remove_packages
 box "(progress: 3/$num_steps]"
+
 set_modprobe_bl
-set_intel_optim
 box "[progress: 4/$num_steps]"
-set_xorg_conf
-set_io_schedulers
-set_ntfs3
+
+set_intel_optim
 box "[progress: 5/$num_steps]"
-sv_intel_undervolt
+
+set_xorg_conf
 box "[progress: 6/$num_steps]"
-gaming_tweaks
+
+set_io_schedulers
 box "[progress: 7/$num_steps]"
-purge_kernels
+
+set_ntfs3
 box "[progress: 8/$num_steps]"
-intel_microcode
+
+sv_intel_undervolt
 box "[progress: 9/$num_steps]"
-grub_commandline
+
+gaming_tweaks
 box "[progress: 10/$num_steps]"
-set_fstab
+
+purge_kernels
 box "[progress: 11/$num_steps]"
-setup_fonts
+
+intel_microcode
 box "[progress: 12/$num_steps]"
+
+grub_commandline
+box "[progress: 13/$num_steps]"
+
+set_fstab
+box "[progress: 14/$num_steps]"
+
+setup_fonts
+box "[progress: 15/$num_steps]"
+
 load_gnome_settings
+box "[progress: 16/$num_steps]"
+
 load_dotfiles
+box "[progress: 17/$num_steps]"
 
 boxf "> Running a trim on all supported disks.."
+sleep 1
 sudo fstrim -va
 
 boxu "============= WE ARE DONE! =============="
