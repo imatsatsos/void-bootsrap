@@ -9,7 +9,7 @@ PKGS_REPOS="void-repo-nonfree void-repo-multilib{,-nonfree}"
 PKGS_STEAM="steam libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit mesa-dri-32bit"
 PKGS_STEAM_NVIDIA="nvidia-libs-32bit"
 
-PKGS_GUI="alacritty geany neovim mpv easyeffects"
+PKGS_GUI="alacritty geany neovim xclip mpv easyeffects"
 PKGS_CLI="curl git htop fzf xmirror xrandr xinput intel-undervolt ffmpeg yt-dlp ncdu"
 PKGS_UTILS="intel-gpu-tools nvtop glxinfo libva-utils"
 PKGS_3D="MangoHud lutris"
@@ -86,6 +86,7 @@ install_collection() {
 # geany > text editor
 # htop > sys monitor
 # neovim > term text editor
+# xclip >  Needed for neovim clipboard
 # mpv > media player
 # yt-dlp > download videos from internet
 # ffmpeg > the world runs on this
