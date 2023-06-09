@@ -151,7 +151,7 @@ set_xorg_conf() {
     boxf "> Setting xorg.conf.d.."
     sleep 2
     [ ! -d /etc/X11/xorg.conf.d ] && sudo mkdir -p /etc/X11/xorg.conf.d/
-    sudo cp -v ./resources/{10-xl2411z-customres.conf,70-synaptics.conf,71-mouse-accel.conf} /etc/X11/xorg.conf.d/
+    sudo cp -v ./resources/{10-xl2411z-customres.conf,70-touchpad.conf,71-mouse-accel.conf} /etc/X11/xorg.conf.d/
     box "Done \n"
 }
 

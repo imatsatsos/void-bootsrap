@@ -43,7 +43,7 @@ PKGS="$COMMON $VGA"
 PKGS_GNOME="NetworkManager gnome-core power-profiles-daemon eog gnome-tweaks dconf-editor alacritty"
 PKGS_PLASMA="kde5 dolphin konsole"
 PKGS_DWM="base-devel xst dejavu-fonts-ttf libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel xrandr"
-PKGS_I3="NetworkManager lxappearance power-profiles-daemon xst i3 i3blocks i3lock xrdb alsa-utils gnome-keyring setxkbmap dmenu xwallpaper xrandr sysstat polkit-gnome gettext"
+PKGS_I3="NetworkManager lxappearance power-profiles-daemon xst i3 i3blocks i3lock xrdb pcmanfm alsa-utils gnome-keyring setxkbmap dmenu xwallpaper xrandr sysstat polkit-gnome gettext"
 
 echo -e "\e[1;32m Is this a VM?  [Y/N]"
 read flag_vm
@@ -65,9 +65,9 @@ if [[ "$flag_vm" != [Y/y] ]]; then
 fi
 
 echo -e "\e[1;32m Choose a variant:"
-echo -e "\e[1;32m 1: GNOME"
-echo -e "\e[1;32m 2: PLASMA"
-echo -e "\e[1;32m 3: DWM"
+echo -e "\e[1;32m 1: Gnome"
+echo -e "\e[1;32m 2: Plasma"
+echo -e "\e[1;32m 3: dwm"
 echo -e "\e[1;32m 4: i3"
 read -p "number: " variant
 
