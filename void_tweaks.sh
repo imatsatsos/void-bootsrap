@@ -43,7 +43,7 @@ check_root() {
 }
 
 opening() {
-    boxu  "                   !!!!  IMPORTANT  !!!!                    "
+    boxu "                   !!!!  IMPORTANT  !!!!                    "
     boxu "   THIS SCRIPT MODIFIES SERVICES, APPLICATION AUTOSTARTS,   "
     box  "   REMOVES APPS, TWEAKS SETTINGS AND APPLIES MY PREFFERED   "
     box  " SETUP TO A VOID LINUX SYSTEM. READ IT BEFORE RUNNING IT.   "
@@ -58,8 +58,12 @@ opening() {
     fi
 }
 
+command_exists () {
+    command -v $1 >/dev/null 2>&1;
+}
+
 check_deps() {
-    if command -v curl &> /dev/null && command -v git &> /dev/null && command -v fc-cache &> /dev/null && command -v unzip &> /dev/null
+    if command_exists git && command_exists curl
     then
         box "Dependencies found! \n"
     else
@@ -68,11 +72,11 @@ check_deps() {
             type -P "$pkmgr" &> /dev/null || continue
             case $pkmgr in
                 xbps-install)
-                    sudo xbps-install -Sy curl git fontconfig unzip
+                    sudo xbps-install -Sy git curl
                     box "Done \n"
                     ;;
                 pacman)
-                    sudo pacman -Suy curl git fontconfig unzip
+                    sudo pacman -Suy git curl
                     ;;
             esac
             return
@@ -155,7 +159,7 @@ set_xorg_conf() {
     box "Done \n"
 }
 
-### Optimized Intel Graphics with modprobe
+### Optimize Intel Graphics with modprobe
 set_intel_optim() {
 	boxf "> Optimizing Intel Graphics with modprobe.."
 	sleep 2
@@ -168,9 +172,13 @@ set_intel_optim() {
 sv_intel_undervolt() {
     boxf "> Creating intel-undervolt service and setting undervolt conf.."
     sleep 2
-    sudo xbps-install -y intel-undervolt
+    if command -v intel-undervolt &> /dev/null; then
+		box "! intel-undervolt already installed \n"
+    else
+		sudo xbps-install -Sy intel-undervolt
+	fi
     sudo cp ./resources/intel-undervolt.conf /etc/intel-undervolt.conf
-    if [ -d "/etc/sv/intel-undervolt/"  ]; then
+    if [ -d "/etc/sv/intel-undervolt/" ]; then
 		box "! intel-undervolt service already configured \n"
 	else
 		sudo mkdir -p /etc/sv/intel-undervolt/
@@ -191,8 +199,8 @@ gaming_tweaks() {
     sleep 1.5
     echo "$(whoami) hard nofile 524288" | sudo tee -a /etc/security/limits.conf
     sleep 1.5
-    boxf "> Enabling MangoHud CPU (Intel) Power access.."
-    sudo chmod o+r /sys/class/powercap/intel-rapl\:0/energy_uj
+    #boxf "> Enabling MangoHud CPU (Intel) Power access.."
+    #sudo chmod o+r /sys/class/powercap/intel-rapl\:0/energy_uj
     box "Done \n"
 }
 
@@ -242,27 +250,6 @@ set_fstab() {
 
 ### Install fonts ###
 setup_fonts() {
-    boxf "> Installing some fonts.."
-    sleep 1
-    if fc-list | grep Hack >/dev/null; then 
-		box "! Hack already installed \n"
-	else
-		if command -v curl >/dev/null 2>&1; then
-			curl -L https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.0/Hack.zip -o Hack.zip
-			if [ ! -f Hack.zip ]; then
-				box "\e[1;31m! ERROR: Font download failed.."
-			else
-				unzip Hack.zip -d ./Hack
-				[ ! -d ~/.local/share/fonts/ ] && mkdir -p ~/.local/share/fonts/
-				mv ./Hack ~/.local/share/fonts/
-				rm Hack.zip
-				fc-cache -f
-			fi
-		else
-			box "\e[1;31m! ERROR: curl not found!"
-			box "\e[1;31m! please install curl..!"
-		fi
-	fi
 	boxf "> Fixing blurry bitmap fonts.."
     sleep 2
     [ ! -f /etc/fonts/conf.d/70-no-bitmaps.conf ] &&  sudo ln -sv /usr/share/fontconfig/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d/
