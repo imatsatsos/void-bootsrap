@@ -10,8 +10,8 @@ PKGS_STEAM="steam libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit mesa-
 PKGS_STEAM_NVIDIA="nvidia-libs-32bit"
 
 PKGS_GUI="alacritty geany neovim xclip mpv easyeffects"
-PKGS_CLI="curl git htop fzf xmirror xrandr xinput intel-undervolt ffmpeg yt-dlp ncdu"
-PKGS_UTILS="intel-gpu-tools nvtop glxinfo libva-utils"
+PKGS_CLI="curl git fzf xmirror xrandr xinput ffmpeg yt-dlp ncdu"
+PKGS_UTILS="htop intel-undervolt intel-gpu-tools nvtop glxinfo libva-utils"
 PKGS_3D="MangoHud lutris"
 PKGS_SUM="$PKGS_GUI $PKGS_CLI $PKGS_UTILS $PKGS_3D"
 
@@ -75,7 +75,7 @@ install_flatpak() {
 
 install_collection() {
 	box "Do you want to: Install Collection?   [Y/N]"
-	box "$( echo $PKGS_SUM )"
+	box "$PKGS: echo $PKGS_SUM"
 	read -r dm4
 	if [[ "$dm4" == [Y/y] ]]; then
 		sudo xbps-install -Sy $PKGS_SUM

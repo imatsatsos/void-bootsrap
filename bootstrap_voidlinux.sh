@@ -43,7 +43,7 @@ PKGS="$COMMON $VGA"
 PKGS_GNOME="NetworkManager gnome-core power-profiles-daemon eog gnome-tweaks dconf-editor alacritty"
 PKGS_PLASMA="kde5 dolphin konsole"
 PKGS_DWM="base-devel xst dejavu-fonts-ttf libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel xrandr"
-PKGS_I3="NetworkManager lxappearance power-profiles-daemon xst i3 i3blocks i3lock xrdb pcmanfm alsa-utils gnome-keyring setxkbmap dmenu xwallpaper xrandr sysstat polkit-gnome gettext"
+PKGS_I3="NetworkManager lxappearance power-profiles-daemon xst i3 i3blocks i3lock dunst xrdb pcmanfm alsa-utils gnome-keyring setxkbmap dmenu xwallpaper xrandr sysstat polkit-gnome gettext"
 
 echo -e "\e[1;32m Is this a VM?  [Y/N]"
 read flag_vm
@@ -166,7 +166,7 @@ echo -e "\e[1;32m------------- DONE! -------------\e[0m"; sleep 3
 if [[ $variant -eq 3 ]]; then
 	echo -e "\e[1;32mYou use suckless, you know how to proceed. ;)\e[0m"
 elif [[ $variant -eq 4 ]]; then
-	echo "exec dbus-run-session /usr/bin/i3" > /home/$USER/.xinitrc
+	echo "exec dbus-launch --exit-with-session /usr/bin/i3" > /home/$USER/.xinitrc
 	echo -e "   \e[1;32m$.xinitrc for i3 created, run startx!\e[0m"
 else
 	sudo ln -s "/etc/sv/$DM" /var/service
