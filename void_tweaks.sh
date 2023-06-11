@@ -198,9 +198,6 @@ gaming_tweaks() {
     # enable Esync
     sleep 1.5
     echo "$(whoami) hard nofile 524288" | sudo tee -a /etc/security/limits.conf
-    sleep 1.5
-    #boxf "> Enabling MangoHud CPU (Intel) Power access.."
-    #sudo chmod o+r /sys/class/powercap/intel-rapl\:0/energy_uj
     box "Done \n"
 }
 
