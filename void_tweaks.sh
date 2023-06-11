@@ -117,7 +117,7 @@ disable_autostarts() {
 remove_packages() {
     boxf "> Removing useless packages.."
     sleep 2
-    sudo cp -v ./resources/99-ignored-pkgs.conf /etc/xbps.d/99-ignored-pkgs.conf
+    sudo cp -v ./resources/etc/99-ignored-pkgs.conf /etc/xbps.d/99-ignored-pkgs.conf
     sudo xbps-remove -Fy linux-firmware-amd linux-firmware-broadcom mobile-broadband-provider-info ipw2200-firmware ipw2100-firmware
     box "Done \n"
 }
@@ -128,7 +128,7 @@ set_io_schedulers() {
     box "bfq for HDD/SSD, none for NVMe"
     sleep 2
     [ ! -d /etc/udev/rules.d/ ] && sudo mkdir -p /etc/udev/rules.d/
-    sudo cp -v ./resources/60-ioschedulers.rules /etc/udev/rules.d/60-ioschedulers.rules
+    sudo cp -v ./resources/udev/60-ioschedulers.rules /etc/udev/rules.d/60-ioschedulers.rules
     box "Done \n"
 }
 
@@ -137,7 +137,7 @@ set_ntfs3() {
 	boxf "> Setting ntfs3 kernel by default.."
     sleep 2
     [ ! -d /etc/udev/rules.d/ ] && sudo mkdir -p /etc/udev/rules.d/
-    sudo cp -v ./resources/ntfs3_default.rules /etc/udev/rules.d/ntfs3_default.rules
+    sudo cp -v ./resources/udev/ntfs3_default.rules /etc/udev/rules.d/ntfs3_default.rules
     box "Done \n"
 }
 
@@ -146,7 +146,7 @@ set_modprobe_bl() {
     boxf "> Setting modprobe.."
     sleep 2
     [ ! -d /etc/modprobe.d/ ] && mkdir -p /etc/modprobe.d/
-    sudo cp -v ./resources/modprobe.conf /etc/modprobe.d/modprobe.conf
+    sudo cp -v ./resources/modprobe/modprobe.conf /etc/modprobe.d/modprobe.conf
     box "Done \n"
 }
 
@@ -155,7 +155,7 @@ set_xorg_conf() {
     boxf "> Setting xorg.conf.d.."
     sleep 2
     [ ! -d /etc/X11/xorg.conf.d ] && sudo mkdir -p /etc/X11/xorg.conf.d/
-    sudo cp -v ./resources/{10-xl2411z-customres.conf,70-touchpad.conf,71-mouse-accel.conf} /etc/X11/xorg.conf.d/
+    sudo cp -v ./resources/xorg/{10-xl2411z-customres.conf,70-touchpad.conf,71-mouse-accel.conf} /etc/X11/xorg.conf.d/
     box "Done \n"
 }
 
@@ -164,7 +164,7 @@ set_intel_optim() {
 	boxf "> Optimizing Intel Graphics with modprobe.."
 	sleep 2
 	[ ! -d /etc/modprobe.d/ ] && mkdir -p /etc/modprobe.d/
-	sudo cp -v ./resources/intel-graphics.conf /etc/modprobe.d/intel-graphics.conf
+	sudo cp -v ./resources/modprobe/intel-graphics.conf /etc/modprobe.d/intel-graphics.conf
 	box "Done \n"
 }
 
@@ -182,11 +182,27 @@ sv_intel_undervolt() {
 		box "! intel-undervolt service already configured \n"
 	else
 		sudo mkdir -p /etc/sv/intel-undervolt/
-		sudo cp -fv ./resources/intel-undervolt/run /etc/sv/intel-undervolt/run
+		sudo cp -fv ./resources/etc/intel-undervolt/run /etc/sv/intel-undervolt/run
 		sudo chmod +x /etc/sv/intel-undervolt/run
 		sudo ln -s /etc/sv/intel-undervolt /var/service/
 		box "Done \n"
     fi
+}
+
+### ACPI handler.sh
+acpi_handler() {
+	boxf "> Replacing acpi handler.sh in /etc/acpi/.."
+    sleep 2
+    sudo cp ./resources/etc/handler.sh /etc/handler.sh
+	box "Done \n"
+}
+
+### elogind conf
+elogind_conf() {
+	boxf "> Replacing logind.conf in /etc/elogind/.."
+    sleep 2
+    sudo cp ./resources/etc/logind.conf /etc/elogind/logind.conf
+	box "Done \n"
 }
 
 ### Gaming tweaks ###
@@ -303,7 +319,7 @@ load_dotfiles(){
 
 ###  MAIN  ###
 
-num_steps=17
+num_steps=18
 indx=1
 
 check_root
@@ -360,6 +376,10 @@ box "[progress: 16/$num_steps]"
 
 load_dotfiles
 box "[progress: 17/$num_steps]"
+
+acpi_handler
+elogind_conf
+box "[progress: 18/$num_steps]"
 
 boxf "> Running a trim on all supported disks.."
 sleep 1
