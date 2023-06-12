@@ -25,8 +25,8 @@ menu() {
 	yellow "Your Options are:"
 	yellow " 1: Setup Audio (pipewire, wireplumber, alsa-utils)"
 	yellow " 2: Setup acpi and elogin"
-	yellow " 3: Install Virt-manager"
-	yellow " 4: Install a collection of apps"
+	yellow " 3: "
+	yellow " 4: "
 	yellow " 0: Exit"
 	read -p "Enter a number: " choice
 }

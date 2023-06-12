@@ -37,7 +37,7 @@
 ###############################################################################################
 
 COMMON="intel-ucode dbus elogind power-profiles-daemon xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit bluez gvfs"
-XORG="xorg-minimal xrandr xrdb setxkbmap"
+XORG="xorg-minimal xrandr xrdb xinput setxkbmap"
 VGA="mesa-dri intel-video-accel mesa-intel-dri mesa-vulkan-intel"
 PKGS="$XORG $COMMON $VGA"
 
