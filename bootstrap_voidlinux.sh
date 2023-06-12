@@ -36,22 +36,23 @@
 # gvfs 				> mounting drives and trash for gnome
 ###############################################################################################
 
-COMMON="intel-ucode xorg-minimal dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber rtkit bluez gvfs"
+COMMON="intel-ucode dbus elogind power-profiles-daemon xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit bluez gvfs"
+XORG="xorg-minimal xrandr xrdb setxkbmap"
 VGA="mesa-dri intel-video-accel mesa-intel-dri mesa-vulkan-intel"
-PKGS="$COMMON $VGA"
+PKGS="$XORG $COMMON $VGA"
 
-PKGS_GNOME="NetworkManager gnome-core power-profiles-daemon eog gnome-tweaks dconf-editor alacritty"
+PKGS_GNOME="gnome-core NetworkManager eog gnome-tweaks dconf-editor alacritty"
 PKGS_PLASMA="kde5 dolphin konsole"
-PKGS_DWM="base-devel xst dejavu-fonts-ttf libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel xrandr"
-PKGS_I3="i3 i3blocks i3lock NetworkManager lxappearance power-profiles-daemon xst dunst xrdb pcmanfm alsa-utils gnome-keyring setxkbmap dmenu xwallpaper xrandr sysstat polkit-gnome gettext"
+PKGS_DWM="base-devel xst pcmanfm dejavu-fonts-ttf libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel"
+PKGS_I3="i3 i3blocks i3lock xst dejavu-fonts-ttf pcmanfm NetworkManager lxappearance dunst gnome-keyring dmenu xwallpaper sysstat polkit-gnome gettext"
 
 echo -e "\e[1;32m Is this a VM?  [Y/N]"
 read flag_vm
 # Fewer pkgs and VM drivers [MORE TEST NEEDED]
 if [[ "$flag_vm" == [Y/y] ]]; then
 	VGA="mesa-dri xf86-video-qxl"
-	COMMON="xorg-minimal dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber rtkit gvfs"
-	PKGS="$COMMON $VGA"
+	COMMON="dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit gvfs"
+	PKGS="$XORG $COMMON $VGA"
 fi
 
 if [[ "$flag_vm" != [Y/y] ]]; then
@@ -60,7 +61,7 @@ if [[ "$flag_vm" != [Y/y] ]]; then
 	# Install NVIDIA drivers [MORE TEST NEEDED]
 	if [[ "$flag_nvidia" == [Y/y] ]]; then
 		VGA="$VGA nvidia nvidia-vaapi-driver"
-		PKGS="$COMMON $VGA"
+		PKGS="$XORG $COMMON $VGA"
 	fi
 fi
 
