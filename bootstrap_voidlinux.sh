@@ -43,7 +43,7 @@ PKGS="$COMMON $VGA"
 PKGS_GNOME="NetworkManager gnome-core power-profiles-daemon eog gnome-tweaks dconf-editor alacritty"
 PKGS_PLASMA="kde5 dolphin konsole"
 PKGS_DWM="base-devel xst dejavu-fonts-ttf libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel xrandr"
-PKGS_I3="NetworkManager lxappearance power-profiles-daemon xst i3 i3blocks i3lock dunst xrdb pcmanfm alsa-utils gnome-keyring setxkbmap dmenu xwallpaper xrandr sysstat polkit-gnome gettext"
+PKGS_I3="i3 i3blocks i3lock NetworkManager lxappearance power-profiles-daemon xst dunst xrdb pcmanfm alsa-utils gnome-keyring setxkbmap dmenu xwallpaper xrandr sysstat polkit-gnome gettext"
 
 echo -e "\e[1;32m Is this a VM?  [Y/N]"
 read flag_vm
@@ -130,34 +130,29 @@ esac
 
 
 echo -e "\e[1;31m> Almost done now. Are you here?.. (press any key)\e[0m"; read -r blabla
+
 # Set up wireplumber
 echo -e "\e[1;32m> Setting up wireplumber session manager..\e[0m"; sleep 3
 if command -v pipewire >/dev/null 2>&1 && command -v wireplumber >/dev/null 2>&1; then
 	[ ! -d /etc/pipewire/ ] && sudo mkdir -p /etc/pipewire/
-	sudo cp /usr/share/pipewire/pipewire.conf /etc/pipewire/pipewire.conf
-	sudo sed -i '/path.*=.*pipewire-media-session/s/{/#{/' /etc/pipewire/pipewire.conf
 	[ ! -d /etc/pipewire/pipewire.conf.d/ ] && sudo mkdir -p /etc/pipewire/pipewire.conf.d/
-	echo 'context.exec = [ { path = "/usr/bin/wireplumber" args = "" } ]' | sudo tee /etc/pipewire/pipewire.conf.d/10-wireplumber.conf
-    sudo cp -v /usr/share/applications/pipewire-pulse.desktop /etc/xdg/autostart/
-    sudo cp -v /usr/share/applications/pipewire.desktop /etc/xdg/autostart/
+	sudo ln -s /usr/share/examples/wireplumber/10-wireplumber.conf /etc/pipewire/pipewire.conf.d/
+	sudo cp -v /usr/share/applications/pipewire-pulse.desktop /etc/xdg/autostart/
+	sudo cp -v /usr/share/applications/pipewire.desktop /etc/xdg/autostart/
 else
 	echo "\e[1;31m ! ERROR: pipewire and/or wireplumber is not installed!"; sleep 3
 fi
 
-
 # Services
-echo -e "\e[1;32m  Disabling services: wpa_supplicant, dhcpcd, sshd..\e[0m"; sleep 3
-#sudo rm -v /var/service/wpa_supplicant
-#sudo rm -v /var/service/dhcpcd
-#sudo rm -v /var/service/sshd
 if [[ "$flag_vm" == [Y/y] ]]; then
+	echo -e "\e[1;32m  Disabling services: wpa_supplicant, sshd..\e[0m"; sleep 3
 	sudo rm -v /var/service/{wpa_supplicant,sshd}
 else
+	echo -e "\e[1;32m  Disabling services: wpa_supplicant, dhcpcd, sshd..\e[0m"; sleep 3
 	sudo rm -v /var/service/{wpa_supplicant,dhcpcd,sshd}
 fi
 echo -e "\e[1;32m  Enabling services: dbus, NetworkManager..\e[0m"; sleep 3
 sudo ln -s /etc/sv/{dbus,NetworkManager} /var/service/
-#sudo ln -s /etc/sv/NetworkManager /var/service/
 if [[ $variant -eq 4 ]]; then
 	sudo ln -s /etc/sv/power-profiles-daemon /var/service/
 fi
