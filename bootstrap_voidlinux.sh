@@ -166,7 +166,8 @@ echo -e "\e[1;32m------------- DONE! -------------\e[0m"; sleep 3
 if [[ $variant -eq 3 ]]; then
 	echo -e "\e[1;32mYou use suckless, you know how to proceed. ;)\e[0m"
 elif [[ $variant -eq 4 ]]; then
-	echo "exec dbus-launch --exit-with-session /usr/bin/i3" > /home/$USER/.xinitrc
+	cp ./resources/.xinitrc /home/$USER/
+	#echo "exec dbus-launch --exit-with-session /usr/bin/i3" > /home/$USER/.xinitrc
 	echo -e "   \e[1;32m$.xinitrc for i3 created, run startx!\e[0m"
 else
 	sudo ln -s "/etc/sv/$DM" /var/service
