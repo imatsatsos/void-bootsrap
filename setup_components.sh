@@ -24,8 +24,8 @@ menu() {
 	yellow "Welcome! This script will setup various system components on a Void Linux installation."
 	yellow "Your Options are:"
 	yellow " 1: Setup Audio (pipewire, wireplumber, alsa-utils)"
-	yellow " 2: Setup acpi and elogin"
-	yellow " 3: "
+	yellow " 2: Setup Acpid and Elogind"
+	yellow " 3: Install / update Envycontrol"
 	yellow " 4: "
 	yellow " 0: Exit"
 	read -p "Enter a number: " choice
@@ -38,8 +38,8 @@ command_exists () {
 
 setup_audio() {
 	yellow "Do you want to setup Audio (pipewire, wireplumber, alsa-utils)?  [Y/N]"
-	read -r dm1
-	if [[ "$dm1" == [Y/y] ]]; then
+	read -r dm
+	if [[ "$dm" == [Y/y] ]]; then
 		
 		# check to install pipewire, wireplumber, alsa-utils
 		if ! command_exists pipewire wireplumber alsa-utils; then
@@ -70,8 +70,8 @@ setup_audio() {
 
 setup_acpid_elogind() {
 	yellow "Do you want to setup ACPID, ELOGIND?  [Y/N]"
-	read -r dm2
-	if [[ "$dm2" == [Y/y] ]]; then
+	read -r dm
+	if [[ "$dm" == [Y/y] ]]; then
 		
 		# check to install acpid and elogind
 		if ! command_exists acpid loginctl; then
@@ -94,6 +94,20 @@ setup_acpid_elogind() {
 	fi
 }
 
+install_envycontrol() {
+ 	yellow "Do you want to install/update Envycontrol?  [Y/N]"
+	read -r dm
+	if [[ "$dm" == [Y/y] ]]; then
+
+        yellow "Installing envycontrol git to ~/.local/bin/"
+        sleep 2
+        git clone https://github.com/bayasdev/envycontrol.git
+        [ ! -d ./envycontrol/ ] && red "! git clone failed" && return
+        [ ! -d /home/$USER/.local/bin/ ] && mkdir -p /home/$USER/.local/bin/
+        cp -f ./envycontrol/envycontrol.py /home/$USER/.local/bin/
+        rm -rf ./envycontrol/
+        green "Done \n"
+}
 
 # RUN
 while true; do
@@ -106,7 +120,7 @@ while true; do
 			setup_acpid_elogind
 		;;
 		3)
-			#install_virtmanager
+			install_envycontrol
 		;;
 		4)
 			#install_collection

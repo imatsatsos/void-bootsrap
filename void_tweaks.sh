@@ -23,6 +23,11 @@ boxu() {
 
 box() {
     title=" $1 "
+    echo -e "\e[1;31m$title\e[0m"
+}
+
+boxerr() {
+    title=" $1 "
     echo -e "\e[1;32m$title\e[0m"
 }
 
@@ -189,6 +194,18 @@ sv_intel_undervolt() {
     fi
 }
 
+### Install envycontrol to control NVIDIA card
+install_envycontrol() {
+    boxf "> Installing envycontrol git to ~/.local/bin/"
+    sleep 2
+    git clone https://github.com/bayasdev/envycontrol.git
+    [ ! -d ./envycontrol/ ] && boxerr "! git clone failed"
+    [ ! -d /home/$USER/.local/bin/ ] && mkdir -p /home/$USER/.local/bin/
+    cp -f ./envycontrol/envycontrol.py /home/$USER/.local/bin/
+    rm -rf ./envycontrol/
+    box "Done \n"
+}
+
 ### ACPI handler.sh
 acpi_handler() {
 	boxf "> Replacing acpi handler.sh in /etc/acpi/.."
@@ -338,6 +355,7 @@ box "(progress: 3/$num_steps]"
 set_modprobe_bl
 box "[progress: 4/$num_steps]"
 
+install_envycontrol
 set_intel_optim
 box "[progress: 5/$num_steps]"
 

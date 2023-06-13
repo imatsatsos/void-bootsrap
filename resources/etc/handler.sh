@@ -21,12 +21,11 @@ notify_send() {
 #lock as root? NOT WORKING
 lock()
 {
-    for pid in $(pgrep 'i3'); do
-        eval $(grep -zw ^USER /proc/$pid/environ)
-        eval export $(grep -z ^DISPLAY /proc/$pid/environ)
-        eval export $(grep -z ^DBUS_SESSION_BUS_ADDRESS /proc/$pid/environ)
-        su $USER -c "/home/$USER/.config/i3/scripts/i3exit lock"
-    done
+    pid=$(pgrep -x 'i3')
+    eval $(grep -zw ^USER /proc/$pid/environ)
+    eval export $(grep -z ^DISPLAY /proc/$pid/environ)
+    eval export $(grep -z ^DBUS_SESSION_BUS_ADDRESS /proc/$pid/environ)
+    su $USER -c "/home/$USER/.config/i3/scripts/i3exit lock"
     #local display=$DISPLAY
     #local user=$(who | grep $display | awk '{print $1}')
     #local uid=$(id -u $user)
@@ -78,10 +77,8 @@ case "$1" in
             SBTN|SLPB)
                 # suspend-to-ram
                 logger "Sleep Button pressed: $2, suspending..."
-		#"/home/john/.config/i3/scripts/i3exit lock"
-		lock
-		sleep 1
-                #zzz
+		# lock first then sleep
+		lock & sleep 1 & zzz
                 ;;
             *)  logger "ACPI action undefined: $2" ;;
         esac
@@ -91,14 +88,12 @@ case "$1" in
             AC|ACAD|ADP0|ACPI*)
                 case "$4" in
                     00000000)
-                        #echo -n 125 > /sys/class/backlight/intel_backlight/brightness
 			printf '125' >/sys/class/backlight/intel_backlight/brightness
 			notify_send "AC: Disconnected"
 			#printf '%s' "$minspeed" >"$setspeed"
                         #/etc/laptop-mode/laptop-mode start
                     ;;
                     00000001)
-			#echo -n 12125 > /sys/class/backlight/intel_backlight/brightness
 			printf '12125' >/sys/class/backlight/intel_backlight/brightness
 			notify_send "AC: Connected"
                         #printf '%s' "$maxspeed" >"$setspeed"
@@ -129,8 +124,7 @@ case "$1" in
             close)
                 # suspend-to-ram
                 logger "LID closed, suspending..."
-                lock
-		zzz
+                lock & sleep 1 & zzz
                 ;;
             open)
                 logger "LID opened"
