@@ -66,15 +66,15 @@
 # gettext
 ###############################################################################################
 
-COMMON="intel-ucode dbus elogind power-profiles-daemon xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit bluez gvfs"
+COMMON="intel-ucode dbus elogind power-profiles-daemon xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit bluez gvfs dejavu-fonts-ttf"
 XORG="xorg-minimal xrandr xrdb xinput xprop setxkbmap"
 VGA="mesa-dri intel-video-accel mesa-intel-dri mesa-vulkan-intel"
 PKGS_BASE="$XORG $COMMON $VGA"
 
 PKGS_GNOME="gnome-core NetworkManager eog gnome-tweaks dconf-editor alacritty"
 PKGS_PLASMA="kde5 dolphin konsole"
-PKGS_DWM="base-devel xst pcmanfm dejavu-fonts-ttf libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel"
-PKGS_I3="i3 i3blocks i3lock xst dejavu-fonts-ttf pcmanfm feh NetworkManager lxappearance dunst gnome-keyring dmenu xwallpaper polkit-gnome sysstat gettext"
+PKGS_DWM="base-devel xst pcmanfm libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel"
+PKGS_I3="i3 i3blocks i3lock xst pcmanfm feh NetworkManager lxappearance dunst gnome-keyring dmenu xwallpaper polkit-gnome sysstat gettext"
 
 echo -e "\e[1;32m Is this a VM?  [Y/N]"
 read flag_vm

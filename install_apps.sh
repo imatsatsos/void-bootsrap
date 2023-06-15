@@ -24,9 +24,9 @@ PKGS_REPOS="void-repo-nonfree void-repo-multilib{,-nonfree}"
 PKGS_STEAM="steam libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit mesa-dri-32bit"
 PKGS_STEAM_NVIDIA="nvidia-libs-32bit"
 
-PKGS_GUI="alacritty geany mpv easyeffects"
+PKGS_GUI="alacritty geany mpv easyeffects rofi"
 PKGS_CLI="git ffmpeg yt-dlp ncdu neovim xclip"
-PKGS_UTILS="htop intel-undervolt intel-gpu-tools nvtop"
+PKGS_UTILS="htop intel-undervolt intel-gpu-tools nvtop Kooha"
 PKGS_3D="MangoHud lutris"
 PKGS_SUM="$PKGS_GUI $PKGS_CLI $PKGS_UTILS $PKGS_3D"
 
