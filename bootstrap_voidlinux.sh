@@ -74,14 +74,14 @@ PKGS_BASE="$XORG $COMMON $VGA"
 PKGS_GNOME="gnome-core NetworkManager eog gnome-tweaks dconf-editor alacritty"
 PKGS_PLASMA="kde5 dolphin konsole"
 PKGS_DWM="base-devel xst pcmanfm libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel"
-PKGS_I3="i3 i3blocks i3lock xst pcmanfm feh NetworkManager lxappearance dunst gnome-keyring dmenu xwallpaper polkit-gnome sysstat gettext"
+PKGS_I3="i3 i3blocks i3lock xst pcmanfm feh NetworkManager lxappearance dunst gnome-keyring dmenu rofi xwallpaper polkit-gnome sysstat gettext"
 
 echo -e "\e[1;32m Is this a VM?  [Y/N]"
 read flag_vm
 # Fewer pkgs and VM drivers [MORE TEST NEEDED]
 if [[ "$flag_vm" == [Y/y] ]]; then
 	VGA="mesa-dri xf86-video-qxl"
-	COMMON="dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit gvfs"
+	COMMON="dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit gvfs dejavu-fonts-ttf"
 	PKGS_BASE="$XORG $COMMON $VGA"
 fi
 
@@ -103,8 +103,8 @@ echo -e "\e[1;32m 4: i3"
 read -p "number: " variant
 
 
-echo -e "\e[1;32m  This will take some time, go grab a coffee!\e[0m"; sleep 3
-echo -e "\e[1;32m  Initial mirror sync, xmirror install, enabling void-repo-nonfree..\e[0m"; sleep 3
+echo -e "\e[1;32m  This will take some time, go grab a coffee!\e[0m"; sleep 2
+echo -e "\e[1;32m  Initial mirror sync, xmirror install, enabling void-repo-nonfree..\e[0m"; sleep 1
 sudo xbps-install -Sy xmirror void-repo-nonfree
 sudo xmirror --set https://repo-de.voidlinux.org/
 
@@ -203,3 +203,4 @@ else
 	sudo ln -s "/etc/sv/$DM" /var/service
 	echo -e "   \e[1;32m$DM will start shortly.\e[0m"
 fi
+echo -e "\e[1;32m]A restart is highly recommended!"

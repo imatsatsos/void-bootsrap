@@ -107,6 +107,7 @@ install_envycontrol() {
         cp -f ./envycontrol/envycontrol.py /home/$USER/.local/bin/
         rm -rf ./envycontrol/
         green "Done \n"
+    fi
 }
 
 # RUN

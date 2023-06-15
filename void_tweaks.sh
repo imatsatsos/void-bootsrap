@@ -1,5 +1,4 @@
 #!/bin/bash
-
 ###############################################################################################
 # Author: 	imatsatsos                                                                        #
 # Description:	This script install's the tweaks I use on a Void Linux system                 #
@@ -103,15 +102,16 @@ disable_services() {
 disable_autostarts() {    
     boxf "> Disabling useless autostarts (.desktop).."
     sleep 2
-    SYS_AUTOSTART="/etc/xdg/autostart/"; USER_AUTOSTART="~/.config/autostart/";
+    SYS_AUTOSTART="/etc/xdg/autostart/"
+    USER_AUTOSTART="$HOME/.config/autostart/"
     [ ! -d ${USER_AUTOSTART} ] &&  mkdir -p ${USER_AUTOSTART}
-    [ ! -f ${USER_AUTOSTART}/zeitgeist-datahub.desktop ] 						&& cp -v ${SYS_AUTOSTART}/zeitgeist-datahub.desktop 				${USER_AUTOSTART}
+    [ ! -f ${USER_AUTOSTART}/zeitgeist-datahub.desktop ]					 && cp -v ${SYS_AUTOSTART}/zeitgeist-datahub.desktop 				${USER_AUTOSTART}
     echo "Hidden=true" >> ${USER_AUTOSTART}/zeitgeist-datahub.desktop
-    [ ! -f ${USER_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop ] 			&& cp -v ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop 	${USER_AUTOSTART}
+    [ ! -f ${USER_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop ] 		 && cp -v ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop 	${USER_AUTOSTART}
     echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop
-    [ ! -f ${USER_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ] 	&& cp -v ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ${USER_AUTOSTART}
+    [ ! -f ${USER_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ] && cp -v ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ${USER_AUTOSTART}
     echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop
-    [ ! -f ${USER_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop ] 		&& cp -v ${SYS_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop 	${USER_AUTOSTART}
+    [ ! -f ${USER_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop ] 	 && cp -v ${SYS_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop ${USER_AUTOSTART}
     echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop
     #[ ! -f ~/.config/autostart/tracker-miner-fs-3.desktop ] && cp -v /etc/xdg/autostart/tracker-miner-fs-3.desktop ~/.config/autostart/
     #echo "Hidden=true" >> ~/.config/autostart/tracker-miner-fs-3.desktop
@@ -182,12 +182,12 @@ sv_intel_undervolt() {
     else
 		sudo xbps-install -Sy intel-undervolt
 	fi
-    sudo cp ./resources/intel-undervolt.conf /etc/intel-undervolt.conf
+    sudo cp ./resources/etc/intel-undervolt.conf /etc/intel-undervolt.conf
     if [ -d "/etc/sv/intel-undervolt/" ]; then
 		box "! intel-undervolt service already configured \n"
 	else
 		sudo mkdir -p /etc/sv/intel-undervolt/
-		sudo cp -fv ./resources/etc/intel-undervolt/run /etc/sv/intel-undervolt/run
+		sudo cp -fv ./resources/intel-undervolt/run /etc/sv/intel-undervolt/run
 		sudo chmod +x /etc/sv/intel-undervolt/run
 		sudo ln -s /etc/sv/intel-undervolt /var/service/
 		box "Done \n"
@@ -210,7 +210,7 @@ install_envycontrol() {
 acpi_handler() {
 	boxf "> Replacing acpi handler.sh in /etc/acpi/.."
     sleep 2
-    sudo cp ./resources/etc/handler.sh /etc/handler.sh
+    sudo cp -f ./resources/etc/handler.sh /etc/handler.sh
 	box "Done \n"
 }
 
@@ -218,7 +218,7 @@ acpi_handler() {
 elogind_conf() {
 	boxf "> Replacing logind.conf in /etc/elogind/.."
     sleep 2
-    sudo cp ./resources/etc/logind.conf /etc/elogind/logind.conf
+    sudo cp -f ./resources/etc/logind.conf /etc/elogind/logind.conf
 	box "Done \n"
 }
 
@@ -335,69 +335,51 @@ load_dotfiles(){
 }
 
 ###  MAIN  ###
-
-num_steps=18
-indx=1
-
 check_root
+
 opening
+
 check_deps
 
 disable_services
-box "[progress: 1/$num_steps]"
 
 disable_autostarts
-box "[progress: 2/$num_steps]"
 
 remove_packages
-box "(progress: 3/$num_steps]"
 
 set_modprobe_bl
-box "[progress: 4/$num_steps]"
 
 install_envycontrol
+
 set_intel_optim
-box "[progress: 5/$num_steps]"
 
 set_xorg_conf
-box "[progress: 6/$num_steps]"
 
 set_io_schedulers
-box "[progress: 7/$num_steps]"
 
 set_ntfs3
-box "[progress: 8/$num_steps]"
 
 sv_intel_undervolt
-box "[progress: 9/$num_steps]"
 
 gaming_tweaks
-box "[progress: 10/$num_steps]"
 
 purge_kernels
-box "[progress: 11/$num_steps]"
 
 intel_microcode
-box "[progress: 12/$num_steps]"
 
 grub_commandline
-box "[progress: 13/$num_steps]"
 
 set_fstab
-box "[progress: 14/$num_steps]"
 
 setup_fonts
-box "[progress: 15/$num_steps]"
 
 load_gnome_settings
-box "[progress: 16/$num_steps]"
 
 load_dotfiles
-box "[progress: 17/$num_steps]"
 
 acpi_handler
+
 elogind_conf
-box "[progress: 18/$num_steps]"
 
 boxf "> Running a trim on all supported disks.."
 sleep 1
