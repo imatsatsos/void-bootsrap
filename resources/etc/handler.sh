@@ -6,19 +6,41 @@
 
 #notify-send as root
 notify_send() {
-    title="$1"
-    shift 1
-    body="$*"
-
-    for pid in $(pgrep 'i3'); do
-        eval $(grep -zw ^USER /proc/$pid/environ)
-        eval export $(grep -z ^DISPLAY /proc/$pid/environ)
-        eval export $(grep -z ^DBUS_SESSION_BUS_ADDRESS /proc/$pid/environ)
-        su $USER -c "notify-send -t 1000 \"$title\" \"$body\""
-    done
+    pid=$(pidof 'i3')    
+    eval $(grep -zw ^USER /proc/$pid/environ)
+    eval export $(grep -z ^DISPLAY /proc/$pid/environ)
+    eval export $(grep -z ^DBUS_SESSION_BUS_ADDRESS /proc/$pid/environ)
+    
+    [ "$1" = "00000000" ] && do_notif "Power" "AC: Disconnected" #&& play_sound "$1"
+    [ "$1" = "00000001" ] && do_notif "Power" "AC: Connected"
+    
 }
 
-#lock as root? NOT WORKING
+# dunstify as root
+do_notif() {
+    su $USER -c "dunstify -a \"Power\" \
+	    \"$1\" \
+	    \"$2\" \
+	    -r 999 \
+	    -t 10000"
+}
+
+# play sound as root
+play_sound() {
+    pid=$(pidof -s 'wireplumber')
+    eval $(grep -zw ^USER /proc/$pid/environ)
+    eval export $(grep -z ^DISPLAY /proc/$pid/environ)
+    eval export $(grep -z ^DBUS_SESSION_BUS_ADDRESS /proc/$pid/environ)
+    sounds="/usr/share/sounds/freedesktop/stereo/"
+    if [ "$1" = "00000000" ]; then
+	su john -c "paplay $sounds/power-unplug.oga"
+	echo its0
+    elif [ "$1" = "00000001" ]; then
+        echo its1
+    fi
+}
+
+#lock as root
 lock()
 {
     pid=$(pgrep -x 'i3')
@@ -35,26 +57,26 @@ lock()
 
 # $1 should be + or - to step up or down the brightness.
 step_backlight() {
-    for backlight in /sys/class/backlight/*/; do
-        [ -d "$backlight" ] || continue
+	for backlight in /sys/class/backlight/*/; do
+		[ -d "$backlight" ] || continue
 
 		max_brightness_file="$backlight/max_brightness"
 		brightness_file="$backlight/brightness"
 		brightness=$(cat $brightness_file)
 		max_brightness=$(cat $max_brightness_file)
-	
+
 		#step is 20% of max_brightness
 		step=$(( $max_brightness / 20 ))
-        	[ "$step" -gt "1" ] || step=10 #fallback if gradation is too low
-	
-		printf '%s' "$(( $brightness $1 step ))" >$brightness_file
-		if command -v bc >/dev/null; then
-			perc=$(echo "scale=2;$brightness/$max_brightness*100" | bc)
-			notify_send "Brightness: $perc%"
+		[ "$step" -gt "1" ] || step=10 #fallback if gradation is too low
+		
+		new_brightness=$(( brightness $1 step ))
+		
+		if [ "$new_brightness" -gt 24000 ]; then
+			printf '24000' >$brightness_file
 		else
-			notify_send "Brightness: $1"
+			printf '%s' "$new_brightness" >$brightness_file
 		fi
-    done
+	done
 }
 
 minspeed=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq)
@@ -78,7 +100,9 @@ case "$1" in
                 # suspend-to-ram
                 logger "Sleep Button pressed: $2, suspending..."
 		# lock first then sleep
-		lock & sleep 1 & zzz
+		lock
+		sleep 1
+		zzz
                 ;;
             *)  logger "ACPI action undefined: $2" ;;
         esac
@@ -89,13 +113,13 @@ case "$1" in
                 case "$4" in
                     00000000)
 			printf '125' >/sys/class/backlight/intel_backlight/brightness
-			notify_send "AC: Disconnected"
+			notify_send "$4"
 			#printf '%s' "$minspeed" >"$setspeed"
                         #/etc/laptop-mode/laptop-mode start
                     ;;
                     00000001)
 			printf '12125' >/sys/class/backlight/intel_backlight/brightness
-			notify_send "AC: Connected"
+			notify_send "$4"
                         #printf '%s' "$maxspeed" >"$setspeed"
                         #/etc/laptop-mode/laptop-mode stop
                     ;;
@@ -124,7 +148,10 @@ case "$1" in
             close)
                 # suspend-to-ram
                 logger "LID closed, suspending..."
-                lock & sleep 1 & zzz
+		# lock first then sleep
+		lock
+		sleep 1
+		zzz
                 ;;
             open)
                 logger "LID opened"
