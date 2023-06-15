@@ -86,7 +86,7 @@ setup_acpid_elogind() {
 		sudo sed -i '/#HandleLidSwitchExternalPower=suspend/ s/^#\(.*=\).*$/\1ignore/' /etc/elogind/logind.conf
 		
 		# copy new acpid handler.sh
-		#sudo cp -f ./handler.sh /etc/acpi/handler.sh
+		sudo cp -f ./handler.sh /etc/acpi/handler.sh
 		
 		# enable acpid service if it's not already linked
 		[ ! -d /var/service/acpid ] && sudo ln -s /etc/acpid /var/service/

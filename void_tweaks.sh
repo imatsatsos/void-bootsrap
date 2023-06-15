@@ -105,16 +105,26 @@ disable_autostarts() {
     SYS_AUTOSTART="/etc/xdg/autostart/"
     USER_AUTOSTART="$HOME/.config/autostart/"
     [ ! -d ${USER_AUTOSTART} ] &&  mkdir -p ${USER_AUTOSTART}
-    [ ! -f ${USER_AUTOSTART}/zeitgeist-datahub.desktop ]					 && cp -v ${SYS_AUTOSTART}/zeitgeist-datahub.desktop 				${USER_AUTOSTART}
-    echo "Hidden=true" >> ${USER_AUTOSTART}/zeitgeist-datahub.desktop
-    [ ! -f ${USER_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop ] 		 && cp -v ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop 	${USER_AUTOSTART}
-    echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop
-    [ ! -f ${USER_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ] && cp -v ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ${USER_AUTOSTART}
-    echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop
-    [ ! -f ${USER_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop ] 	 && cp -v ${SYS_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop ${USER_AUTOSTART}
-    echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop
-    #[ ! -f ~/.config/autostart/tracker-miner-fs-3.desktop ] && cp -v /etc/xdg/autostart/tracker-miner-fs-3.desktop ~/.config/autostart/
-    #echo "Hidden=true" >> ~/.config/autostart/tracker-miner-fs-3.desktop
+    if [ ! -f ${USER_AUTOSTART}/zeitgeist-datahub.desktop ]; then
+        cp -v ${SYS_AUTOSTART}/zeitgeist-datahub.desktop 				${USER_AUTOSTART}
+        echo "Hidden=true" >> ${USER_AUTOSTART}/zeitgeist-datahub.desktop
+    fi
+    if [ ! -f ${USER_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop ]; then
+        cp -v ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop 	${USER_AUTOSTART}
+        echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop
+    fi
+    if [ ! -f ${USER_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ]; then
+        cp -v ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ${USER_AUTOSTART}
+        echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop
+    fi
+    if [ ! -f ${USER_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop ]; then
+        cp -v ${SYS_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop ${USER_AUTOSTART}
+        echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop
+    fi
+    #if [ ! -f ~/.config/autostart/tracker-miner-fs-3.desktop ]; then
+    #   cp -v /etc/xdg/autostart/tracker-miner-fs-3.desktop ~/.config/autostart/
+    #   echo "Hidden=true" >> ~/.config/autostart/tracker-miner-fs-3.desktop
+    #fi
     box "Done \n"
 }
 
@@ -210,7 +220,7 @@ install_envycontrol() {
 acpi_handler() {
 	boxf "> Replacing acpi handler.sh in /etc/acpi/.."
     sleep 2
-    sudo cp -f ./resources/etc/handler.sh /etc/handler.sh
+    sudo cp -f ./resources/etc/handler.sh /etc/acpi/handler.sh
 	box "Done \n"
 }
 

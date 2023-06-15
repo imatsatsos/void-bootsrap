@@ -162,7 +162,7 @@ esac
 
 echo -e "\e[1;31m> Almost done now. Are you here?.. (press any key)\e[0m"; read -r blabla
 
-# Set up wireplumber
+# Set up pipewire & wireplumber
 echo -e "\e[1;32m> Setting up pipewire with wireplumber session manager..\e[0m"; sleep 3
 if command -v pipewire >/dev/null 2>&1 && command -v wireplumber >/dev/null 2>&1; then
 	[ ! -d /etc/pipewire/ ] && sudo mkdir -p /etc/pipewire/
