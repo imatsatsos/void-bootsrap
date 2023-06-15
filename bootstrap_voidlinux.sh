@@ -163,7 +163,7 @@ esac
 echo -e "\e[1;31m> Almost done now. Are you here?.. (press any key)\e[0m"; read -r blabla
 
 # Set up wireplumber
-echo -e "\e[1;32m> Setting up wireplumber session manager..\e[0m"; sleep 3
+echo -e "\e[1;32m> Setting up pipewire with wireplumber session manager..\e[0m"; sleep 3
 if command -v pipewire >/dev/null 2>&1 && command -v wireplumber >/dev/null 2>&1; then
 	[ ! -d /etc/pipewire/ ] && sudo mkdir -p /etc/pipewire/
 	[ ! -d /etc/pipewire/pipewire.conf.d/ ] && sudo mkdir -p /etc/pipewire/pipewire.conf.d/
@@ -197,10 +197,9 @@ if [[ $variant -eq 3 ]]; then
 	echo -e "   \e[1;32m$ an example .xinitrc is created, edit it and run startx!\e[0m"
 elif [[ $variant -eq 4 ]]; then
 	cp ./resources/.xinitrc /home/$USER/
-	#echo "exec dbus-launch --exit-with-session /usr/bin/i3" > /home/$USER/.xinitrc
 	echo -e "   \e[1;32m$.xinitrc for i3 created, run startx!\e[0m"
 else
 	sudo ln -s "/etc/sv/$DM" /var/service
 	echo -e "   \e[1;32m$DM will start shortly.\e[0m"
 fi
-echo -e "\e[1;32m]A restart is highly recommended!"
+echo -e "\e[1;32mA restart is highly recommended!\e[0m"
