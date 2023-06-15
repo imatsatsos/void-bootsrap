@@ -72,7 +72,7 @@ step_backlight() {
 		new_brightness=$(( brightness $1 step ))
 		
 		if [ "$new_brightness" -gt 24000 ]; then
-			printf '24000' >$brightness_file
+			printf '%s' "$max_brightness" >$brightness_file
 		else
 			printf '%s' "$new_brightness" >$brightness_file
 		fi
