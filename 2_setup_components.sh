@@ -1,8 +1,13 @@
 #!/bin/bash
-# This scripts setups various system components on a Void Linux installation
+# AUTHOR: imatsatsos
+# This script setups various system components on a Void Linux installation
 # These currently include:
 # AUDIO: pipewire with wireplumber server and alsa-utils
-# ACPI: setup acpid and elogind to not interfere with each other
+# ACPID: setup acpid to handle acpi events and disable them for elogind to 
+#  not interfere with each other. Some extra bling included
+# NVIDIA: install drivers for nvidia 
+# ENVYCONTROL: utility to toggle integrated and NVIDIA gpu
+
 
 yellow() {
     title="$1"
@@ -21,12 +26,11 @@ red(){
 
 
 menu() {
-	yellow "Welcome! This script will setup various system components on a Void Linux installation."
 	yellow "Your Options are:"
 	yellow " 1: Setup Audio (pipewire, wireplumber, alsa-utils)"
 	yellow " 2: Setup Acpid and Elogind"
-	yellow " 3: Install / update Envycontrol"
-	yellow " 4: "
+	yellow " 3: Install NVIDIA drivers"
+	yellow " 4: Install/update Envycontrol"
 	yellow " 0: Exit"
 	read -p "Enter a number: " choice
 }
@@ -59,17 +63,18 @@ setup_audio() {
 		# another method
 		#echo 'context.exec = [ { path = "/usr/bin/wireplumber" args = "" } ]' | sudo tee /etc/pipewire/pipewire.conf.d/10-wireplumber.conf
 		# void docs method
-		sudo ln -s /usr/share/examples/wireplumber/10-wireplumber.conf /etc/pipewire/pipewire.conf.d/
+		[ -f /etc/pipewire/pipewire.conf.d/10-wireplumber.conf ] && sudo rm -f /etc/pipewire/pipewire.conf.d/10-wireplumber.conf
+        sudo ln -s /usr/share/examples/wireplumber/10-wireplumber.conf /etc/pipewire/pipewire.conf.d/
 		# create autostart .desktop files
-		sudo cp -v /usr/share/applications/pipewire-pulse.desktop /etc/xdg/autostart/
-		sudo cp -v /usr/share/applications/pipewire.desktop /etc/xdg/autostart/
+		sudo cp -f /usr/share/applications/pipewire-pulse.desktop /etc/xdg/autostart/
+		sudo cp -f /usr/share/applications/pipewire.desktop /etc/xdg/autostart/
 		green "Audio is setup!\n"
 	fi
 }
 
 
 setup_acpid_elogind() {
-	yellow "Do you want to setup ACPID, ELOGIND?  [Y/N]"
+	yellow "Do you want to setup ACPID and ELOGIND?  [Y/N]"
 	read -r dm
 	if [[ "$dm" == [Y/y] ]]; then
 		
@@ -86,16 +91,31 @@ setup_acpid_elogind() {
 		sudo sed -i '/#HandleLidSwitchExternalPower=suspend/ s/^#\(.*=\).*$/\1ignore/' /etc/elogind/logind.conf
 		
 		# copy new acpid handler.sh
-		sudo cp -f ./handler.sh /etc/acpi/handler.sh
+		sudo cp -f ./resources/etc/handler.sh /etc/acpi/handler.sh
 		
 		# enable acpid service if it's not already linked
-		[ ! -d /var/service/acpid ] && sudo ln -s /etc/acpid /var/service/
+		[ ! -d /var/service/acpid ] && sudo ln -s /etc/sv/acpid /var/service/
 		green "acpid, elogind are setup!\n"
 	fi
 }
 
+install_nvidia() {
+    yellow "Do you want to install NVIDIA drivers? [y/N]"
+    read -r dm
+    if [[ "$dm" == [Y/y] ]]; then
+
+        yellow "Installing NVIDIA drivers"
+        sleep 2
+        sudo xbps-install -Sy void-repo-multilib
+        sleep 0.5
+        sudo xbps-install -Sy nvidia nvidia-vaapi-driver nvidia-libs-32bit
+        
+        green "NVIDIA drivers installed! Good luck :P"
+    fi
+}
+
 install_envycontrol() {
- 	yellow "Do you want to install/update Envycontrol?  [Y/N]"
+ 	yellow "Do you want to install/update Envycontrol?  [y/N]"
 	read -r dm
 	if [[ "$dm" == [Y/y] ]]; then
 
@@ -106,11 +126,12 @@ install_envycontrol() {
         [ ! -d /home/$USER/.local/bin/ ] && mkdir -p /home/$USER/.local/bin/
         cp -f ./envycontrol/envycontrol.py /home/$USER/.local/bin/
         rm -rf ./envycontrol/
-        green "Done \n"
+        green "Done. envycontrol is installed in ~/.local/bin\n"
     fi
 }
 
 # RUN
+yellow "Welcome! This script will setup various system components on a Void Linux installation."
 while true; do
 	menu
 	case $choice in
@@ -121,10 +142,10 @@ while true; do
 			setup_acpid_elogind
 		;;
 		3)
-			install_envycontrol
+			install_nvidia
 		;;
 		4)
-			#install_collection
+			install_envycontrol
 		;;
 		0)
 			green "Bye bye!"

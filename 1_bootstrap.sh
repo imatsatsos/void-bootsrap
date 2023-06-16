@@ -1,13 +1,11 @@
 #!/bin/bash
-
 ###############################################################################################
 # Author: imatsatsos                                                                          #
 # Description: This script setups Void Linux for Intel systems. It provides the user a choice #
-#    to install a minimal GNOME, PLASMA, i3, or SUCKLESS (DWM) setup, enables basic services and   #
-#    finally provides to install drivers in case the system will be used inside a VM.         #
+#  to install a minimal GNOME, PLASMA, i3, or SUCKLESS (DWM) setup and enables basic services #
 ###############################################################################################
 
-###  Description of packages  #######################################################
+###  Description of packages  #################################################################
 # xmirror 			    > void utility to set xbps mirror, I set it to tier-1 Germany
 # void-repo-nonfree     > required for intel CPU microcode
 # ------- COMMON -------
@@ -66,27 +64,28 @@
 # gettext
 ###############################################################################################
 
-COMMON="intel-ucode dbus elogind power-profiles-daemon xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit bluez gvfs dejavu-fonts-ttf"
+COMMON="intel-ucode NetworkManager dbus elogind power-profiles-daemon xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit bluez gvfs"
 XORG="xorg-minimal xrandr xrdb xinput xprop setxkbmap"
 VGA="mesa-dri intel-video-accel mesa-intel-dri mesa-vulkan-intel"
 PKGS_BASE="$XORG $COMMON $VGA"
 
-PKGS_GNOME="gnome-core NetworkManager eog gnome-tweaks dconf-editor alacritty"
+PKGS_GNOME="gnome-core eog gnome-tweaks dconf-editor alacritty"
 PKGS_PLASMA="kde5 dolphin konsole"
-PKGS_DWM="base-devel xst pcmanfm libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel"
-PKGS_I3="i3 i3blocks i3lock xst pcmanfm feh NetworkManager lxappearance dunst gnome-keyring dmenu rofi xwallpaper polkit-gnome sysstat gettext"
+PKGS_WM="alacritty pcmanfm feh dmenu rofi lxappearance dunst xwallpaper dejavu-fonts-ttf"
+PKGS_DWM="base-devel libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel"
+PKGS_I3="i3 i3status i3blocks i3lock gnome-keyring polkit-gnome sysstat"
 
-echo -e "\e[1;32m Is this a VM?  [Y/N]"
+echo -e "\e[1;32m Is this a VM?  [y/N]"
 read flag_vm
 # Fewer pkgs and VM drivers [MORE TEST NEEDED]
 if [[ "$flag_vm" == [Y/y] ]]; then
 	VGA="mesa-dri xf86-video-qxl"
-	COMMON="dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit gvfs dejavu-fonts-ttf"
+	COMMON="NetworkManager dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit gvfs"
 	PKGS_BASE="$XORG $COMMON $VGA"
 fi
 
 if [[ "$flag_vm" != [Y/y] ]]; then
-	echo -e "\e[1;32m Do you want to install NVIDIA drivers?  [Y/N]"
+	echo -e "\e[1;32m Do you want to install NVIDIA drivers?  [y/N]"
 	read flag_nvidia
 	# Install NVIDIA drivers [MORE TEST NEEDED]
 	if [[ "$flag_nvidia" == [Y/y] ]]; then
@@ -135,21 +134,17 @@ case $variant in
 	# 3: DWM (suckless)
 	3)
 		echo -e "\e[1;32m Suckless DWM dependencies installation..\e[0m"; sleep 3
-		PKGS="$PKGS_BASE $PKGS_DWM"
-		## for dwm 
-		# xrandr picom xwallpaper thunar git
+		PKGS="$PKGS_BASE $PKGS_WM $PKGS_DWM"
 		sudo xbps-install -y $PKGS
-		# git clone <dwm st etc..>
+        # git clone <dwm st etc..>
 		# cd <repodir>
 		# sudo make clean install
-		# setup .xinitrc
-		# startx
 	;;
     
     # 4: i3
     4)
         echo -e "\e[1;32m Minimal i3 installation..\e[0m"; sleep 3
-        PKGS="$PKGS_BASE $PKGS_I3"
+        PKGS="$PKGS_BASE $PKGS_WM $PKGS_I3"
         sudo xbps-install -y $PKGS
     ;;
 	
@@ -160,10 +155,10 @@ case $variant in
 esac	
 
 
-echo -e "\e[1;31m> Almost done now. Are you here?.. (press any key)\e[0m"; read -r blabla
+echo -e "\e[1;33m> Almost done now. Are you here?.. (Press any key)\e[0m"; read -r blabla
 
 # Set up pipewire & wireplumber
-echo -e "\e[1;32m> Setting up pipewire with wireplumber session manager..\e[0m"; sleep 3
+echo -e "\e[1;32m> Setting up audio (pipewire with wireplumber)..\e[0m"; sleep 
 if command -v pipewire >/dev/null 2>&1 && command -v wireplumber >/dev/null 2>&1; then
 	[ ! -d /etc/pipewire/ ] && sudo mkdir -p /etc/pipewire/
 	[ ! -d /etc/pipewire/pipewire.conf.d/ ] && sudo mkdir -p /etc/pipewire/pipewire.conf.d/
@@ -171,27 +166,24 @@ if command -v pipewire >/dev/null 2>&1 && command -v wireplumber >/dev/null 2>&1
 	sudo cp -v /usr/share/applications/pipewire-pulse.desktop /etc/xdg/autostart/
 	sudo cp -v /usr/share/applications/pipewire.desktop /etc/xdg/autostart/
 else
-	echo "\e[1;31m ! ERROR: pipewire and/or wireplumber is not installed!"; sleep 3
+	echo "\e[1;31m ! ERROR: pipewire and/or wireplumber is not installed!"; sleep 2
 fi
 
 # Services
 if [[ "$flag_vm" == [Y/y] ]]; then
-	echo -e "\e[1;32m  Disabling services: wpa_supplicant, sshd..\e[0m"; sleep 3
+	echo -e "\e[1;32m  Disabling services: wpa_supplicant, sshd..\e[0m"; sleep 2
 	sudo rm -v /var/service/{wpa_supplicant,sshd}
 else
-	echo -e "\e[1;32m  Disabling services: wpa_supplicant, dhcpcd, sshd..\e[0m"; sleep 3
+	echo -e "\e[1;32m  Disabling services: wpa_supplicant, dhcpcd, sshd..\e[0m"; sleep 2
 	sudo rm -v /var/service/{wpa_supplicant,dhcpcd,sshd}
 fi
-echo -e "\e[1;32m  Enabling services: dbus, NetworkManager..\e[0m"; sleep 3
-sudo ln -s /etc/sv/{dbus,NetworkManager} /var/service/
-if [[ $variant -eq 4 ]]; then
-	sudo ln -s /etc/sv/power-profiles-daemon /var/service/
-fi
+echo -e "\e[1;32m  Enabling services: dbus, NetworkManager, power-profiles-manager..\e[0m"; sleep 2
+sudo ln -s /etc/sv/{dbus,NetworkManager,power-profiles-manager} /var/service/
 
 # create home directories
 xdg-user-dirs-update
 
-echo -e "\e[1;32m------------- DONE! -------------\e[0m"; sleep 3
+echo -e "\e[1;32m------------- DONE! -------------\e[0m"; sleep 2
 if [[ $variant -eq 3 ]]; then
 	echo -e "\e[1;32mYou use suckless, you know how to proceed. ;)\e[0m"
 	echo -e "   \e[1;32m$ an example .xinitrc is created, edit it and run startx!\e[0m"
@@ -202,4 +194,4 @@ else
 	sudo ln -s "/etc/sv/$DM" /var/service
 	echo -e "   \e[1;32m$DM will start shortly.\e[0m"
 fi
-echo -e "\e[1;32mA restart is highly recommended!\e[0m"
+echo -e "\e[1;32mA restart is highly recommended!\e[0m"; sleep 2

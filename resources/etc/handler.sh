@@ -6,6 +6,7 @@
 
 #notify-send as root
 notify_send() {
+    [ ! command -v dunstify >/dev/null 2>&1 ] && return
     pid=$(pidof 'i3')    
     eval $(grep -zw ^USER /proc/$pid/environ)
     eval export $(grep -z ^DISPLAY /proc/$pid/environ)
@@ -44,6 +45,7 @@ play_sound() {
 lock()
 {
     pid=$(pgrep -x 'i3')
+    [ -z "$pid" ] && return
     eval $(grep -zw ^USER /proc/$pid/environ)
     eval export $(grep -z ^DISPLAY /proc/$pid/environ)
     eval export $(grep -z ^DBUS_SESSION_BUS_ADDRESS /proc/$pid/environ)
@@ -79,6 +81,20 @@ step_backlight() {
 	done
 }
 
+# $1 should be "AC" or "BATTERY"
+set_energy_profile() {
+    for policy in /sys/devices/system/cpu/cpufreq/*/; do
+        [ -d "$policy" ] || continue
+        curr_prof=$(cat "$policy/energy_performance_preference")
+        if [ "$1" = "AC" ]; then
+            printf '%s' 'balance_performance' >"$policy/energy_performance_preference"
+        elif [ "$1" = "BATTERY" ]; then
+            printf '%s' 'power' >"$policy/energy_performance_preference"
+        fi
+done
+}
+
+
 minspeed=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq)
 maxspeed=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq)
 setspeed="/sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed"
@@ -113,12 +129,14 @@ case "$1" in
                 case "$4" in
                     00000000)
 			printf '125' >/sys/class/backlight/intel_backlight/brightness
+			set_energy_profile BATTERY
 			notify_send "$4"
 			#printf '%s' "$minspeed" >"$setspeed"
                         #/etc/laptop-mode/laptop-mode start
                     ;;
                     00000001)
 			printf '12125' >/sys/class/backlight/intel_backlight/brightness
+			set_energy_profile AC
 			notify_send "$4"
                         #printf '%s' "$maxspeed" >"$setspeed"
                         #/etc/laptop-mode/laptop-mode stop

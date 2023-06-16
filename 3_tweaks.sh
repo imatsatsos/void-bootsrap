@@ -1,8 +1,8 @@
 #!/bin/bash
-###############################################################################################
-# Author: 	imatsatsos                                                                        #
-# Description:	This script install's the tweaks I use on a Void Linux system                 #
-###############################################################################################
+################################################################################
+# Author: 	imatsatsos                                                         #
+# Description:	This script will apply the tweaks I use on a Void Linux system #
+################################################################################
 
 # boxes for nice text
 boxf() {
@@ -22,12 +22,12 @@ boxu() {
 
 box() {
     title=" $1 "
-    echo -e "\e[1;31m$title\e[0m"
+    echo -e "\e[1;32m$title\e[0m"
 }
 
 boxerr() {
     title=" $1 "
-    echo -e "\e[1;32m$title\e[0m"
+    echo -e "\e[1;31m$title\e[0m"
 }
 
 boxd() {
@@ -50,14 +50,14 @@ opening() {
     boxu "                   !!!!  IMPORTANT  !!!!                    "
     boxu "   THIS SCRIPT MODIFIES SERVICES, APPLICATION AUTOSTARTS,   "
     box  "   REMOVES APPS, TWEAKS SETTINGS AND APPLIES MY PREFFERED   "
-    box  " SETUP TO A VOID LINUX SYSTEM. READ IT BEFORE RUNNING IT.   "
-    boxd "            Do you still want to continue? [Y/N]            "
+    box  " SETUP TO A VOID LINUX SYSTEM. !READ IT BEFORE RUNNING IT!  "
+    boxd "            Do you still want to continue? [y/N]            "
     read -r accept
     if [[ "$accept" == [Y/y] ]];
     then
         box "OK! Lets get started! \n"
     else
-        box "That's ok, thanks for checking out this scripti. \n"
+        box "That's ok, thanks for checking out this script. \n"
         exit
     fi
 }
@@ -71,7 +71,7 @@ check_deps() {
     then
         box "Dependencies found! \n"
     else
-		boxf "Installing dependencies.."
+		boxf "> Installing dependencies.."
         for pkmgr in xbps-install pacman; do
             type -P "$pkmgr" &> /dev/null || continue
             case $pkmgr in
@@ -140,7 +140,7 @@ remove_packages() {
 ### Set io-schedulers ###
 set_io_schedulers() {
     boxf "> Setting io-schedulers.."
-    box "bfq for HDD/SSD, none for NVMe"
+    box " bfq -> HDD/SSD, none -> NVMe"
     sleep 2
     [ ! -d /etc/udev/rules.d/ ] && sudo mkdir -p /etc/udev/rules.d/
     sudo cp -v ./resources/udev/60-ioschedulers.rules /etc/udev/rules.d/60-ioschedulers.rules
@@ -158,7 +158,7 @@ set_ntfs3() {
 
 ### Set modprobe blacklist ###
 set_modprobe_bl() {
-    boxf "> Setting modprobe.."
+    boxf "> Setting modprobe blacklist.."
     sleep 2
     [ ! -d /etc/modprobe.d/ ] && mkdir -p /etc/modprobe.d/
     sudo cp -v ./resources/modprobe/modprobe.conf /etc/modprobe.d/modprobe.conf
@@ -185,14 +185,14 @@ set_intel_optim() {
 
 ### Create intel-undervolt service ###
 sv_intel_undervolt() {
-    boxf "> Creating intel-undervolt service and setting undervolt conf.."
+    boxf "> Creating intel-undervolt service and /etc/intel-undervolt.conf.."
     sleep 2
     if command -v intel-undervolt &> /dev/null; then
 		box "! intel-undervolt already installed \n"
     else
 		sudo xbps-install -Sy intel-undervolt
 	fi
-    sudo cp ./resources/etc/intel-undervolt.conf /etc/intel-undervolt.conf
+    sudo cp -v ./resources/etc/intel-undervolt.conf /etc/intel-undervolt.conf
     if [ -d "/etc/sv/intel-undervolt/" ]; then
 		box "! intel-undervolt service already configured \n"
 	else
@@ -202,34 +202,6 @@ sv_intel_undervolt() {
 		sudo ln -s /etc/sv/intel-undervolt /var/service/
 		box "Done \n"
     fi
-}
-
-### Install envycontrol to control NVIDIA card
-install_envycontrol() {
-    boxf "> Installing envycontrol git to ~/.local/bin/"
-    sleep 2
-    git clone https://github.com/bayasdev/envycontrol.git
-    [ ! -d ./envycontrol/ ] && boxerr "! git clone failed"
-    [ ! -d /home/$USER/.local/bin/ ] && mkdir -p /home/$USER/.local/bin/
-    cp -f ./envycontrol/envycontrol.py /home/$USER/.local/bin/
-    rm -rf ./envycontrol/
-    box "Done \n"
-}
-
-### ACPI handler.sh
-acpi_handler() {
-	boxf "> Replacing acpi handler.sh in /etc/acpi/.."
-    sleep 2
-    sudo cp -f ./resources/etc/handler.sh /etc/acpi/handler.sh
-	box "Done \n"
-}
-
-### elogind conf
-elogind_conf() {
-	boxf "> Replacing logind.conf in /etc/elogind/.."
-    sleep 2
-    sudo cp -f ./resources/etc/logind.conf /etc/elogind/logind.conf
-	box "Done \n"
 }
 
 ### Gaming tweaks ###
@@ -248,7 +220,7 @@ gaming_tweaks() {
 purge_kernels() {
     boxf "> Purging old kernels.."
     sleep 2
-    sudo xbps-remove -y linux5.19 >/dev/null
+    sudo xbps-remove -y linux5.19 2>&1
     sudo vkpurge rm all
     box "Done \n"
 }
@@ -271,8 +243,8 @@ intel_microcode() {
 
 ### Grub changes ###
 grub_commandline() {
-    boxf "> Grub mods: silence, speed-up, logo, disable mitigations, disable watchdog"
-    sleep 1
+    boxf "> Grub tweaks: silence, speed-up, logo, disable mitigations, disable watchdog"
+    sleep 2
     sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&quiet loglevel=3 rd.udev.log_level=3 console=tty2 mitigations=off nowatchdog nmi_watchdog=0 fbcon=nodefer /' /etc/default/grub
     sudo sed -i 's/GRUB_TIMEOUT.*/GRUB_TIMEOUT=1/' /etc/default/grub
     sudo sed -i 's/^#GRUB_BACKGROUND/GRUB_BACKGROUND/' /etc/default/grub
@@ -282,13 +254,13 @@ grub_commandline() {
 
 ### Fstab ext4 tweaks ###
 set_fstab() {
-    boxf "> Adding: noatime,commit=60 to fstab for ext4 / partition.."
+    boxf "> Adding: noatime,commit=60 to fstab for ext4 root (/) partition.."
     sleep 2
     sudo sed -i '/^\S*\s\+\/\s/{s/defaults/&,noatime,commit=60/}' /etc/fstab
     box "Done \n"
 }
 
-### Install fonts ###
+### Fix blurry fonts ###
 setup_fonts() {
 	boxf "> Fixing blurry bitmap fonts.."
     sleep 2
@@ -303,7 +275,7 @@ load_gnome_settings() {
 	echo "$currentDE detected."
 	case $currentDE in
 		"GNOME")
-			boxf "\e[1;31m> Next step will load GNOME settings, is this ok? [Y/N]"
+			boxf "\e[1;31m> Next step will load GNOME settings, is this ok? [y/N]"
 			read -r accept
 			if [[ "$accept" == [Y/y] ]];
 			then
@@ -330,7 +302,7 @@ load_gnome_settings() {
 }
 
 load_dotfiles(){
-    boxf "\e[1;31m> Do you want to apply my dotfiles? [Y/N]"
+    boxf "\e[1;31m> Do you want to apply imatsatsos' dotfiles? [y/N]"
     read -r accept
     if [[ "$accept" == [Y/y] ]]; then
 		git clone https://github.com/imatsatsos/dotfiles.git
@@ -359,8 +331,6 @@ remove_packages
 
 set_modprobe_bl
 
-install_envycontrol
-
 set_intel_optim
 
 set_xorg_conf
@@ -387,14 +357,9 @@ load_gnome_settings
 
 load_dotfiles
 
-acpi_handler
-
-elogind_conf
-
 boxf "> Running a trim on all supported disks.."
 sleep 1
 sudo fstrim -va
 
 boxu "============= WE ARE DONE! =============="
 boxd "            Please reboot !!!            "
-sleep 1

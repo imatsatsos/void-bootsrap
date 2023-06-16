@@ -1,9 +1,8 @@
 #!/bin/bash
-
-###############################################################################################
-# Author: 	imatsatsos                                                                        #
-# Description:	This script install's my preferred applications in an interactive way         #
-###############################################################################################
+#######################################################################################
+# Author: 	imatsatsos                                                                #
+# Description:	This script install's my preferred applications in an interactive way #
+#######################################################################################
 # alacritty       > terminal
 # geany           > text editor
 # htop            > sys monitor
@@ -20,9 +19,9 @@
 # nvtop           > monitor for nvidia intel amd gpus
 # MangoHud        > MSI-afterburner like ingame OSD
 
-PKGS_REPOS="void-repo-nonfree void-repo-multilib{,-nonfree}"
+PKGS_REPOS="void-repo-nonfree void-repo-multilib void-repo-multilib-nonfree"
 PKGS_STEAM="steam libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit mesa-dri-32bit"
-PKGS_STEAM_NVIDIA="nvidia-libs-32bit"
+PKGS_STEAM_NVIDIA="nvidia nvidia-vaapi-driver nvidia-libs-32bit"
 
 PKGS_GUI="alacritty geany mpv easyeffects rofi"
 PKGS_CLI="git ffmpeg yt-dlp ncdu neovim xclip"
@@ -36,7 +35,6 @@ com.github.tchx84.Flatseal \
 com.spotify.Client \
 fr.handbrake.ghb \
 net.cozic.joplin_desktop \
-org.gnome.Calculator \
 org.remmina.Remmina \
 org.signal.Signal"
 
@@ -56,7 +54,6 @@ red(){
 }
  
 menu() {
-	yellow "Welcome! This script will help you get your apps installed faf."
 	yellow "Your Options are:"
 	yellow " 1: Install Steam"
 	yellow " 2: Install Flatpak"
@@ -68,23 +65,23 @@ menu() {
 }
 
 install_steam() {
-	yellow "Do you want to: Install Steam?    [Y/N]"
+	yellow "Do you want to: Install Steam?    [y/N]"
 	read -r dm
 	if [[ "$dm" == [Y/y] ]]; then
-		yellow "Will you use an Nvidia GPU for Steam?    [Y/N]"
+		yellow "Will you use an Nvidia GPU for Steam?    [y/N]"
 		read -r dm2
 		sudo xbps-install -Sy $PKGS_REPOS
-		if [[ "$dm2" == [N/n] ]]; then
-			sudo xbps-install -Sy $PKGS_STEAM
-			else
+		if [[ "$dm2" == [Y/y] ]]; then
 			sudo xbps-install -Sy $PKGS_STEAM $PKGS_STEAM_NVIDIA
+		else
+			sudo xbps-install -Sy $PKGS_STEAM
 		fi
 		green "Steam installed!\n"
 	fi
 }
 
 setup_flatpak() {
-	yellow "Do you want to: Setup Flatpak?    [Y/N]"
+	yellow "Do you want to: Setup Flatpak?    [y/N]"
 	read -r dm
 	if [[ "$dm" == [Y/y] ]]; then
 		sudo xbps-install -Sy flatpak; sleep 0.5
@@ -94,13 +91,13 @@ setup_flatpak() {
 			green "Flatpak installed!\n"
             install_flatpaks
 		else
-			red "! ERROR: Something went wrong .."
+			red "! ERROR: package flatpak is not installed.."
 		fi
 	fi
 }
 
 install_flatpaks() {
-    yellow "Do you want to: Install a collection of flatpaks?    [Y/N]"
+    yellow "Do you want to: Install a collection of flatpaks?    [y/N]"
 	yellow "FLATPAKS: $FLATPAKS"
     read -r dm
 	if [[ "$dm" == [Y/y] ]]; then
@@ -119,7 +116,7 @@ install_flatpaks() {
 }
 
 install_pkgs() {
-	yellow "Do you want to: Install Package Collection?   [Y/N]"
+	yellow "Do you want to: Install Package Collection?   [y/N]"
 	yellow "PKGS: $PKGS_SUM"
 	read -r dm
 	if [[ "$dm" == [Y/y] ]]; then
@@ -129,7 +126,7 @@ install_pkgs() {
 }
 
 install_virtmanager() {
-	yellow "Do you want to: Install KVM (virt-manager)?   [Y/N]"
+	yellow "Do you want to: Install KVM (virt-manager)?   [y/N]"
 	read -r dm
 	if [[ "$dm" == [Y/y] ]]; then
 		sudo xbps-install -Sy libvirtd virt-manager qemu
@@ -141,6 +138,7 @@ install_virtmanager() {
 }
 
 # RUN
+yellow "Welcome! This script will help you get your apps installed faf."
 while true; do
 	menu
 	case $choice in
@@ -160,7 +158,7 @@ while true; do
             install_flatpaks
         ;;
 		0)
-			yellow "Bye bye!"
+			green "Bye bye!"
 			exit 0
 		;;
 		*)
