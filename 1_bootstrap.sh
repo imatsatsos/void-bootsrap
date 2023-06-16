@@ -103,7 +103,7 @@ read -p "number: " variant
 
 
 echo -e "\e[1;32m  This will take some time, go grab a coffee!\e[0m"; sleep 2
-echo -e "\e[1;32m  Initial mirror sync, xmirror install, enabling void-repo-nonfree..\e[0m"; sleep 1
+echo -e "\e[1;32m  Initial mirror sync, xmirror install, enabling void-repo-nonfree..\e[0m";
 sudo xbps-install -Sy xmirror void-repo-nonfree
 sudo xmirror --set https://repo-de.voidlinux.org/
 
@@ -158,7 +158,7 @@ esac
 echo -e "\e[1;33m> Almost done now. Are you here?.. (Press any key)\e[0m"; read -r blabla
 
 # Set up pipewire & wireplumber
-echo -e "\e[1;32m> Setting up audio (pipewire with wireplumber)..\e[0m"; sleep 
+echo -e "\e[1;32m> Setting up audio (pipewire with wireplumber)..\e[0m"; sleep 2 
 if command -v pipewire >/dev/null 2>&1 && command -v wireplumber >/dev/null 2>&1; then
 	[ ! -d /etc/pipewire/ ] && sudo mkdir -p /etc/pipewire/
 	[ ! -d /etc/pipewire/pipewire.conf.d/ ] && sudo mkdir -p /etc/pipewire/pipewire.conf.d/
@@ -178,7 +178,7 @@ else
 	sudo rm -v /var/service/{wpa_supplicant,dhcpcd,sshd}
 fi
 echo -e "\e[1;32m  Enabling services: dbus, NetworkManager, power-profiles-manager..\e[0m"; sleep 2
-sudo ln -s /etc/sv/{dbus,NetworkManager,power-profiles-manager} /var/service/
+sudo ln -sv /etc/sv/{dbus,NetworkManager,power-profiles-manager} /var/service/
 
 # create home directories
 xdg-user-dirs-update
@@ -191,7 +191,7 @@ elif [[ $variant -eq 4 ]]; then
 	cp ./resources/.xinitrc /home/$USER/
 	echo -e "   \e[1;32m$.xinitrc for i3 created, run startx!\e[0m"
 else
-	sudo ln -s "/etc/sv/$DM" /var/service
+	sudo ln -sv "/etc/sv/$DM" /var/service
 	echo -e "   \e[1;32m$DM will start shortly.\e[0m"
 fi
 echo -e "\e[1;32mA restart is highly recommended!\e[0m"; sleep 2

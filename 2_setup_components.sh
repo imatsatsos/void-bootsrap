@@ -41,7 +41,7 @@ command_exists () {
 
 
 setup_audio() {
-	yellow "Do you want to setup Audio (pipewire, wireplumber, alsa-utils)?  [Y/N]"
+	yellow "Do you want to setup Audio (pipewire, wireplumber, alsa-utils)?  [y/N]"
 	read -r dm
 	if [[ "$dm" == [Y/y] ]]; then
 		
@@ -74,7 +74,7 @@ setup_audio() {
 
 
 setup_acpid_elogind() {
-	yellow "Do you want to setup ACPID and ELOGIND?  [Y/N]"
+	yellow "Do you want to setup ACPID and ELOGIND?  [y/N]"
 	read -r dm
 	if [[ "$dm" == [Y/y] ]]; then
 		

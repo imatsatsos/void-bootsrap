@@ -102,23 +102,23 @@ disable_services() {
 disable_autostarts() {    
     boxf "> Disabling useless autostarts (.desktop).."
     sleep 2
-    SYS_AUTOSTART="/etc/xdg/autostart/"
+    SYS_AUTOSTART="/etc/xdg/autostart"
     USER_AUTOSTART="$HOME/.config/autostart/"
     [ ! -d ${USER_AUTOSTART} ] &&  mkdir -p ${USER_AUTOSTART}
-    if [ ! -f ${USER_AUTOSTART}/zeitgeist-datahub.desktop ]; then
-        cp -v ${SYS_AUTOSTART}/zeitgeist-datahub.desktop 				${USER_AUTOSTART}
+    if [ -f ${SYS_AUTOSTART}/zeitgeist-datahub.desktop ]; then
+        cp -fv ${SYS_AUTOSTART}/zeitgeist-datahub.desktop 				${USER_AUTOSTART}
         echo "Hidden=true" >> ${USER_AUTOSTART}/zeitgeist-datahub.desktop
     fi
-    if [ ! -f ${USER_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop ]; then
-        cp -v ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop 	${USER_AUTOSTART}
+    if [ -f ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop ]; then
+        cp -fv ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop 	${USER_AUTOSTART}
         echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop
     fi
-    if [ ! -f ${USER_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ]; then
-        cp -v ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ${USER_AUTOSTART}
+    if [ -f ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ]; then
+        cp -fv ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop ${USER_AUTOSTART}
         echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.SettingsDaemon.A11ySettings.desktop
     fi
-    if [ ! -f ${USER_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop ]; then
-        cp -v ${SYS_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop ${USER_AUTOSTART}
+    if [ -f ${SYS_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop ]; then
+        cp -fv ${SYS_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop ${USER_AUTOSTART}
         echo "Hidden=true" >> ${USER_AUTOSTART}/org.gnome.Evolution-alarm-notify.desktop
     fi
     #if [ ! -f ~/.config/autostart/tracker-miner-fs-3.desktop ]; then
@@ -139,8 +139,8 @@ remove_packages() {
 
 ### Set io-schedulers ###
 set_io_schedulers() {
-    boxf "> Setting io-schedulers.."
-    box " bfq -> HDD/SSD, none -> NVMe"
+    boxu "> Setting io-schedulers.."
+    boxd " bfq -> HDD/SSD, none -> NVMe"
     sleep 2
     [ ! -d /etc/udev/rules.d/ ] && sudo mkdir -p /etc/udev/rules.d/
     sudo cp -v ./resources/udev/60-ioschedulers.rules /etc/udev/rules.d/60-ioschedulers.rules
@@ -272,7 +272,6 @@ setup_fonts() {
 ### Load GNOME Settings ###
 load_gnome_settings() {
 	currentDE="$( echo $XDG_CURRENT_DESKTOP )"
-	echo "$currentDE detected."
 	case $currentDE in
 		"GNOME")
 			boxf "\e[1;31m> Next step will load GNOME settings, is this ok? [y/N]"
