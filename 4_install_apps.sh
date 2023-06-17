@@ -24,8 +24,8 @@ PKGS_STEAM="steam libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit mesa-
 PKGS_STEAM_NVIDIA="nvidia nvidia-vaapi-driver nvidia-libs-32bit"
 
 PKGS_GUI="alacritty geany mpv easyeffects rofi Kooha"
-PKGS_CLI=" htop ncdu neovim xclip btop ranger nvtop"
-PKGS_UTILS="git yt-dlp gcc ffmpeg intel-undervolt intel-gpu-tools"
+PKGS_CLI="htop ncdu neovim xclip btop ranger nvtop intel-gpu-tools"
+PKGS_UTILS="git yt-dlp gcc tree ffmpeg intel-undervolt"
 PKGS_3D="MangoHud lutris"
 PKGS_SUM="$PKGS_GUI $PKGS_CLI $PKGS_UTILS $PKGS_3D"
 
