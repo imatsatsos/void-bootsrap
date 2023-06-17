@@ -11,6 +11,7 @@
 # ------- COMMON -------
 # intel-ucode 		    > microcode update for intel CPUs
 # dbus 				    > needed for apps to talk to the desktop bus
+# NetworkManager 	    > internet conn  manager, it just works for wifi
 # elogind               > seat management
 # power-profiles-daemon > manage INTEL CPU power profile
 # xdg-user-dirs 	    > XDG support for /downloads, /documents, etc..
@@ -37,7 +38,6 @@
 # ------- GNOME --------
 # gnome-core 		    > minimal gnome DE
 # eog 				    > eye of gnome, image viewer
-# NetworkManager 	    > internet conn  manager, it just works for wifi
 # gnome-tweaks 		    > gnome tweaks app
 # dconf-editor          > edit hidden gnome settings, like volume step 
 # alacritty             > terminal
@@ -61,11 +61,10 @@
 # xwallpaper
 # polkit-gnome
 # sysstat
-# gettext
 ###############################################################################################
 
 COMMON="intel-ucode NetworkManager dbus elogind power-profiles-daemon xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit bluez gvfs"
-XORG="xorg-minimal xrandr xrdb xinput xprop setxkbmap"
+XORG="xorg-minimal xrandr xrdb xinput xclip xprop setxkbmap"
 VGA="mesa-dri intel-video-accel mesa-intel-dri mesa-vulkan-intel"
 PKGS_BASE="$XORG $COMMON $VGA"
 
