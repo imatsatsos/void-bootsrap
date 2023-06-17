@@ -35,7 +35,7 @@ com.github.tchx84.Flatseal \
 com.spotify.Client \
 fr.handbrake.ghb \
 net.cozic.joplin_desktop \
-org.remmina.Remmina \
+org.qbittorrent.qBittorrent \
 org.signal.Signal"
 
 yellow() {
