@@ -207,12 +207,23 @@ sv_intel_undervolt() {
 ### Gaming tweaks ###
 gaming_tweaks() {
     boxf "> Setting vm.max_map_count, Enabling Esync.."
-    sleep 1.5
+    sleep 2
     # vm.max_map_count
     echo "vm.max_map_count=2147483642" | sudo tee -a /etc/sysctl.conf
     # enable Esync
-    sleep 1.5
+    sleep 1
     echo "$(whoami) hard nofile 524288" | sudo tee -a /etc/security/limits.conf
+    box "Done \n"
+}
+
+### rc.conf changes
+tty_font() {
+    boxf "> Setting terminus 24b tty font.."
+    sleep 2
+    if [ ! -f /usr/share/kbd/consolefonts/ter-124b.psf.gz ]; then
+        sudo xbps-install -Sy terminus-font
+    fi
+    sudo sed -i.bak 's/^#FONT=.*/FONT="ter-124b"/' /etc/rc.conf
     box "Done \n"
 }
 
@@ -245,7 +256,7 @@ intel_microcode() {
 grub_commandline() {
     boxf "> Grub tweaks: silence, speed-up, logo, disable mitigations, disable watchdog"
     sleep 2
-    sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&quiet loglevel=3 rd.udev.log_level=3 console=tty2 mitigations=off nowatchdog nmi_watchdog=0 fbcon=nodefer /' /etc/default/grub
+    sudo sed -i.bak 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&quiet loglevel=3 rd.udev.log_level=3 console=tty2 mitigations=off nowatchdog nmi_watchdog=0 fbcon=nodefer /' /etc/default/grub
     sudo sed -i 's/GRUB_TIMEOUT.*/GRUB_TIMEOUT=1/' /etc/default/grub
     sudo sed -i 's/^#GRUB_BACKGROUND/GRUB_BACKGROUND/' /etc/default/grub
     sudo grub-mkconfig -o /boot/grub/grub.cfg
@@ -256,7 +267,7 @@ grub_commandline() {
 set_fstab() {
     boxf "> Adding: noatime,commit=60 to fstab for ext4 root (/) partition.."
     sleep 2
-    sudo sed -i '/^\S*\s\+\/\s/{s/defaults/&,noatime,commit=60/}' /etc/fstab
+    sudo sed -i.bak '/^\S*\s\+\/\s/{s/defaults/&,noatime,commit=60/}' /etc/fstab
     box "Done \n"
 }
 
@@ -341,6 +352,8 @@ set_ntfs3
 sv_intel_undervolt
 
 gaming_tweaks
+
+tty_font
 
 purge_kernels
 
