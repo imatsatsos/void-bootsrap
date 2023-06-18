@@ -147,6 +147,13 @@ set_io_schedulers() {
     box "Done \n"
 }
 
+set_pam_gnomekeyring() {
+    boxf "> Making gnome-keyring auto-unlock when used with a WM"
+    sleep 2
+    cp -fv ./resources/etc/login /etc/pam.d/
+    box "Done \n"
+}
+
 ### Set ntfs3 kernel mod for default ntfs mounting
 set_ntfs3() {
 	boxf "> Setting ntfs3 kernel by default.."
@@ -344,6 +351,8 @@ set_modprobe_bl
 set_intel_optim
 
 set_xorg_conf
+
+set_pam_gnomekeyring
 
 set_io_schedulers
 

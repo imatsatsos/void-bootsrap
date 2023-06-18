@@ -70,9 +70,10 @@ PKGS_BASE="$XORG $COMMON $VGA"
 
 PKGS_GNOME="gnome-core eog gnome-tweaks dconf-editor alacritty"
 PKGS_PLASMA="kde5 dolphin konsole"
-PKGS_WM="alacritty pcmanfm feh dmenu rofi lxappearance dunst xwallpaper dejavu-fonts-ttf"
+PKGS_WM="gnome-keyring polkit-gnome upower alacritty pcmanfm feh dmenu rofi lxappearance dunst xwallpaper dejavu-fonts-ttf"
 PKGS_DWM="base-devel libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel"
-PKGS_I3="i3 i3status i3blocks i3lock gnome-keyring polkit-gnome sysstat"
+PKGS_I3="i3 i3status i3blocks i3lock sysstat"
+PKGS_SWAY="sway swaylock swayidle i3blocks"
 
 echo -e "\e[1;32m Is this a VM?  [y/N]"
 read flag_vm
