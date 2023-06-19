@@ -95,6 +95,10 @@ disable_services() {
     [ -d /var/service/wpa_supplicant ] 	&& sudo rm -v /var/service/wpa_supplicant
     [ -d /var/service/dhcpcd ] 			&& sudo rm -v /var/service/dhcpcd
     [ -d /var/service/sshd ] 			&& sudo rm -v /var/service/sshd
+    [ -d /var/service/agetty-tty6 ]     && sudo rm -v /var/service/agetty-tty6
+    [ -d /var/service/agetty-tty5 ]     && sudo rm -v /var/service/agetty-tty5
+    [ -d /var/service/agetty-tty4 ]     && sudo rm -v /var/service/agetty-tty4
+    [ -d /var/service/agetty-tty3 ]     && sudo rm -v /var/service/agetty-tty3
     box "Done \n"
 }
 

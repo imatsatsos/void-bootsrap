@@ -108,7 +108,7 @@ install_nvidia() {
         yellow "Installing NVIDIA drivers"
         sleep 2
         sudo xbps-install -Sy void-repo-multilib
-        sleep 0.5
+        sleep 1
         sudo xbps-install -Sy nvidia nvidia-vaapi-driver nvidia-libs-32bit
         
         green "NVIDIA drivers installed! Good luck :P"
@@ -138,6 +138,8 @@ setup_voidsrcpkgs() {
 
         yellow "Installing to ~/Gitrepos/void-packages"
         sleep 2
+        # dependencies
+        sudo xbps-install -Sy git curl
         mkdir -p $HOME/Gitrepos
         cd $HOME/Gitrepos
         git clone --depth 1 https://github.com/void-linux/void-packages.git
