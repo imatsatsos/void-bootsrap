@@ -31,7 +31,8 @@ menu() {
 	yellow " 2: Setup Acpid and Elogind"
 	yellow " 3: Install NVIDIA drivers"
 	yellow " 4: Install/update Envycontrol"
-	yellow " 0: Exit"
+	yellow " 5: Setup Void source pkgs"
+    yellow " 0: Exit"
 	read -p "Enter a number: " choice
 }
 
@@ -130,6 +131,25 @@ install_envycontrol() {
     fi
 }
 
+setup_voidsrcpkgs() {
+ 	yellow "Do you want to setup Void-source-packages?  [y/N]"
+	read -r dm
+	if [[ "$dm" == [Y/y] ]]; then
+
+        yellow "Installing to ~/Gitrepos/void-packages"
+        sleep 2
+        mkdir -p $HOME/Gitrepos
+        cd $HOME/Gitrepos
+        git clone --depth 1 https://github.com/void-linux/void-packages.git
+        [ ! -d ./void-packages/ ] && red "! git clone failed" && return
+        $HOME/void-packages/xbps-src binary-bootstrap
+        sudo xbps-install -Sy xtools
+        cd -
+        yellow "Usage: ./xbps-src pkg 'name' to build from a template"
+        yellow "       xi 'name' to install a built pkg (xi from xtools)"
+        green "Done. \n"
+    fi
+}
 # RUN
 yellow "Welcome! This script will setup various system components on a Void Linux installation."
 while true; do
@@ -146,8 +166,11 @@ while true; do
 		;;
 		4)
 			install_envycontrol
-		;;
-		0)
+        ;;
+        5)
+            setup_voidsrcpkgs
+        ;;
+        0)
 			green "Bye bye!"
 			exit 0
 		;;
