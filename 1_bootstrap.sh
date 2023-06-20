@@ -64,9 +64,9 @@
 ###############################################################################################
 
 COMMON="intel-ucode NetworkManager dbus elogind power-profiles-daemon xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit bluez gvfs"
-XORG="xorg-minimal xrandr xrdb xinput xclip xprop setxkbmap"
+X11="xorg-minimal xrandr xrdb xinput xclip xprop setxkbmap"
 VGA="mesa-dri intel-video-accel mesa-intel-dri mesa-vulkan-intel"
-PKGS_BASE="$XORG $COMMON $VGA"
+PKGS_BASE="$X11 $COMMON $VGA"
 
 PKGS_GNOME="gnome-core eog gnome-tweaks dconf-editor alacritty"
 PKGS_PLASMA="kde5 dolphin konsole"
@@ -81,7 +81,7 @@ read flag_vm
 if [[ "$flag_vm" == [Y/y] ]]; then
 	VGA="mesa-dri xf86-video-qxl"
 	COMMON="NetworkManager dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit gvfs"
-	PKGS_BASE="$XORG $COMMON $VGA"
+	PKGS_BASE="$X11 $COMMON $VGA"
 fi
 
 if [[ "$flag_vm" != [Y/y] ]]; then
@@ -90,7 +90,7 @@ if [[ "$flag_vm" != [Y/y] ]]; then
 	# Install NVIDIA drivers [MORE TEST NEEDED]
 	if [[ "$flag_nvidia" == [Y/y] ]]; then
 		VGA="$VGA nvidia nvidia-vaapi-driver"
-		PKGS_BASE="$XORG $COMMON $VGA"
+		PKGS_BASE="$X11 $COMMON $VGA"
 	fi
 fi
 
@@ -148,6 +148,12 @@ case $variant in
         sudo xbps-install -y $PKGS
     ;;
 	
+    # 5: Sway
+    5)
+        echo -e "\e[1;32m Minimal Sway installation..\e[0m"; sleep 3
+        PKGS="$COMMON $VGA $PKGS_WM $PKGS_SWAY"
+        sudo xbps-install -y $PKGS
+    ;;
     *)
 		echo -e "\e[1;31mInvalid variant.\e[0m"
 		exit 1

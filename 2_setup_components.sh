@@ -144,7 +144,7 @@ setup_voidsrcpkgs() {
         cd $HOME/Gitrepos
         git clone --depth 1 https://github.com/void-linux/void-packages.git
         [ ! -d ./void-packages/ ] && red "! git clone failed" && return
-        $HOME/void-packages/xbps-src binary-bootstrap
+        $HOME/Gitrepos/void-packages/xbps-src binary-bootstrap
         sudo xbps-install -Sy xtools
         cd -
         yellow "Usage: ./xbps-src pkg 'name' to build from a template"

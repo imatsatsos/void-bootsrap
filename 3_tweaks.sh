@@ -154,7 +154,7 @@ set_io_schedulers() {
 set_pam_gnomekeyring() {
     boxf "> Making gnome-keyring auto-unlock when used with a WM"
     sleep 2
-    cp -fv ./resources/etc/login /etc/pam.d/
+    sudo cp -fv ./resources/etc/login /etc/pam.d/
     box "Done \n"
 }
 
@@ -317,13 +317,13 @@ load_gnome_settings() {
 			fi
 			;;
 		*)
-		box "\e[1;31m Skipping GNOME settings load.."
+		box "\e[1;31m ..Skipping GNOME settings load..\n"
 			;;
 	esac
 }
 
 load_dotfiles(){
-    boxf "\e[1;31m> Do you want to apply imatsatsos' dotfiles? [y/N]"
+    boxf "\e[1;32m> Do you want to apply imatsatsos' dotfiles? [y/N]"
     read -r accept
     if [[ "$accept" == [Y/y] ]]; then
 		git clone https://github.com/imatsatsos/dotfiles.git

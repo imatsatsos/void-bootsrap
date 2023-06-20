@@ -26,7 +26,7 @@ PKGS_STEAM_NVIDIA="nvidia nvidia-vaapi-driver nvidia-libs-32bit"
 PKGS_GUI="alacritty geany mpv easyeffects rofi Kooha"
 PKGS_CLI="htop ncdu neovim xclip btop ranger nvtop intel-gpu-tools"
 PKGS_UTILS="git ripgrep yt-dlp gcc tree ffmpeg intel-undervolt"
-PKGS_3D="MangoHud lutris"
+PKGS_3D="MangoHud lutris gamemode"
 PKGS_SUM="$PKGS_GUI $PKGS_CLI $PKGS_UTILS $PKGS_3D"
 
 FLATPAKS="com.anydesk.Anydesk \
