@@ -37,7 +37,7 @@ A handly script that applies my preference of tweaks. It is advised you read and
 
 ### 4_install_apps.sh
 A menu selection enabling the installation of various apps.
-Most notably thess include:
+Most notably these include:
 - Steam
 - Flatpak with Flathub repo
 - Virt-Manager for creating and running Virtual Machines
