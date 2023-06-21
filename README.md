@@ -1,4 +1,4 @@
-# Void Linux Boostrap
+# Void Linux Bootsrap
 ### 1_void_boostrap.sh
 Run this first, after installing a minimal version of Void Linux. It will provide you with the option to choose a DE or WM to install. It will install drivers for an Intel and/or Nvidia graphic's card. Audio is being handled by pipewire and wireplumber. The bootstrap scripts try's to be very minimal in the packages it installs as to leave the user with a working but highly configurable system to his/her's preferences.
 Currently available DE/WM choices are: Gnome, Plasma, i3, sway, dwm.
