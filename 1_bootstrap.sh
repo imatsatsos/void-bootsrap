@@ -6,8 +6,8 @@
 ###############################################################################################
 
 ###  Description of packages  #################################################################
-# xmirror 			    > void utility to set xbps mirror, I set it to tier-1 Germany
 # void-repo-nonfree     > required for intel CPU microcode
+# xmirror               > void util to set xbps mirror
 # ------- COMMON -------
 # intel-ucode 		    > microcode update for intel CPUs
 # dbus 				    > needed for apps to talk to the desktop bus
