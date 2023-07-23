@@ -64,14 +64,14 @@
 ###############################################################################################
 
 COMMON="intel-ucode NetworkManager dbus elogind power-profiles-daemon xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit bluez gvfs"
-X11="xorg-minimal xrandr xrdb xinput xclip xprop setxkbmap"
+X11="xorg-minimal xrandr xrdb xinput xclip xprop setxkbmap xsetroot"
 VGA="mesa-dri intel-video-accel mesa-intel-dri mesa-vulkan-intel"
 PKGS_BASE="$X11 $COMMON $VGA"
 
 PKGS_GNOME="gnome-core eog gnome-tweaks dconf-editor alacritty"
 PKGS_PLASMA="kde5 dolphin konsole"
-PKGS_WM="gnome-keyring polkit-gnome upower alacritty pcmanfm feh dmenu rofi lxappearance dunst xwallpaper dejavu-fonts-ttf"
-PKGS_DWM="base-devel libX11-devel libXft-devel libXinerama-devel "#fontconfig-devel freetype-devel"
+PKGS_WM="gnome-keyring polkit-gnome upower alacritty pcmanfm feh mpv dmenu rofi lxappearance dunst xwallpaper dejavu-fonts-ttf picom maim"
+PKGS_DWM="base-devel libX11-devel libXft-devel libXinerama-devel pango-devel fontconfig-devel freetype-devel"
 PKGS_I3="i3 i3status i3blocks i3lock sysstat"
 PKGS_SWAY="sway swaylock swayidle i3blocks"
 

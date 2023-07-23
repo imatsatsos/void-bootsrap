@@ -7,19 +7,20 @@
 #notify-send as root
 notify_send() {
     [ ! command -v dunstify >/dev/null 2>&1 ] && return
-    pid=$(pidof 'i3')    
+    pid=$(pidof 'i3') || pid=$(pidof 'dwm')
     eval $(grep -zw ^USER /proc/$pid/environ)
     eval export $(grep -z ^DISPLAY /proc/$pid/environ)
     eval export $(grep -z ^DBUS_SESSION_BUS_ADDRESS /proc/$pid/environ)
-    
-    [ "$1" = "00000000" ] && do_notif "Power" "AC: Disconnected" #&& play_sound "$1"
-    [ "$1" = "00000001" ] && do_notif "Power" "AC: Connected"
+
+    [ "$1" = "00000000" ] && do_notif "Power Adapter:" "Disconnected" #&& play_sound "$1"
+    [ "$1" = "00000001" ] && do_notif "Power Adapter:" "Connected"
     
 }
 
 # dunstify as root
 do_notif() {
-    su $USER -c "dunstify -a \"Power\" \
+    su $USER -c "dunstify \
+	    -a \"Power\" \
 	    \"$1\" \
 	    \"$2\" \
 	    -r 999 \
@@ -44,12 +45,12 @@ play_sound() {
 #lock as root
 lock()
 {
-    pid=$(pgrep -x 'i3')
+    pid=$(pgrep -x 'i3') || pid=$(pidof 'dwm')
     [ -z "$pid" ] && return
     eval $(grep -zw ^USER /proc/$pid/environ)
     eval export $(grep -z ^DISPLAY /proc/$pid/environ)
     eval export $(grep -z ^DBUS_SESSION_BUS_ADDRESS /proc/$pid/environ)
-    su $USER -c "/home/$USER/.config/i3/scripts/i3exit lock"
+    su $USER -c "/home/$USER/.local/bin/i3exit lock"
     #local display=$DISPLAY
     #local user=$(who | grep $display | awk '{print $1}')
     #local uid=$(id -u $user)

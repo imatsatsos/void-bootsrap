@@ -24,10 +24,12 @@ PKGS_STEAM="steam libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit mesa-
 PKGS_STEAM_NVIDIA="nvidia nvidia-vaapi-driver nvidia-libs-32bit"
 
 PKGS_GUI="alacritty geany mpv easyeffects rofi Kooha"
-PKGS_CLI="htop ncdu neovim xclip btop ranger nvtop intel-gpu-tools"
-PKGS_UTILS="git ripgrep yt-dlp gcc tree ffmpeg intel-undervolt"
+PKGS_CLI="htop ncdu neovim xclip xcolor btop ranger nvtop intel-gpu-tools"
+PKGS_UTILS="git jq fzf ImageMagick ripgrep yt-dlp gcc tree ffmpeg intel-undervolt"
 PKGS_3D="MangoHud lutris gamemode"
 PKGS_SUM="$PKGS_GUI $PKGS_CLI $PKGS_UTILS $PKGS_3D"
+
+PKGS_FONTS="font-awesome6 font-material-design-icons-ttf dejavu-fonts-ttf noto-fonts-emoji terminus-font"
 
 FLATPAKS="com.anydesk.Anydesk \
 com.brave.Browser \

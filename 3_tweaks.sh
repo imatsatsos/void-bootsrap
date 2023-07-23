@@ -176,12 +176,12 @@ set_modprobe_bl() {
     box "Done \n"
 }
 
-### Set xorg confs (mouse accel, touchpad, benq-res, etc)
+### Set xorg confs (mouse accel, touchpad, keyboard, benq-res, etc)
 set_xorg_conf() {
     boxf "> Setting xorg.conf.d.."
     sleep 2
     [ ! -d /etc/X11/xorg.conf.d ] && sudo mkdir -p /etc/X11/xorg.conf.d/
-    sudo cp -v ./resources/xorg/{10-xl2411z-customres.conf,70-touchpad.conf,71-mouse-accel.conf} /etc/X11/xorg.conf.d/
+    sudo cp -v ./resources/xorg/* /etc/X11/xorg.conf.d/
     box "Done \n"
 }
 
@@ -229,12 +229,12 @@ gaming_tweaks() {
 
 ### rc.conf changes
 tty_font() {
-    boxf "> Setting terminus 24b tty font.."
+    boxf "> Setting terminus 20b tty font.."
     sleep 2
-    if [ ! -f /usr/share/kbd/consolefonts/ter-124b.psf.gz ]; then
+    if [ ! -f /usr/share/kbd/consolefonts/ter-120b.psf.gz ]; then
         sudo xbps-install -Sy terminus-font
     fi
-    sudo sed -i.bak 's/^#FONT=.*/FONT="ter-124b"/' /etc/rc.conf
+    sudo sed -i.bak 's/^#FONT=.*/FONT="ter-120b"/' /etc/rc.conf
     box "Done \n"
 }
 
@@ -282,15 +282,6 @@ set_fstab() {
     box "Done \n"
 }
 
-### Fix blurry fonts ###
-setup_fonts() {
-	boxf "> Fixing blurry bitmap fonts.."
-    sleep 2
-    [ ! -f /etc/fonts/conf.d/70-no-bitmaps.conf ] &&  sudo ln -sv /usr/share/fontconfig/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d/
-    sudo xbps-reconfigure -f fontconfig
-    box "Done \n"
-}
-
 ### Load GNOME Settings ###
 load_gnome_settings() {
 	currentDE="$( echo $XDG_CURRENT_DESKTOP )"
@@ -326,7 +317,7 @@ load_dotfiles(){
     boxf "\e[1;32m> Do you want to apply imatsatsos' dotfiles? [y/N]"
     read -r accept
     if [[ "$accept" == [Y/y] ]]; then
-		git clone https://github.com/imatsatsos/dotfiles.git
+		git clone --depth=1 https://github.com/imatsatsos/dotfiles.git
 		if [ -d dotfiles/ ]; then
 			chmod a+x ./dotfiles/setup_dots.sh
 			source ./dotfiles/setup_dots.sh
@@ -375,8 +366,6 @@ intel_microcode
 grub_commandline
 
 set_fstab
-
-setup_fonts
 
 load_gnome_settings
 
