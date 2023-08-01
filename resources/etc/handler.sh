@@ -12,18 +12,18 @@ notify_send() {
     eval export $(grep -z ^DISPLAY /proc/$pid/environ)
     eval export $(grep -z ^DBUS_SESSION_BUS_ADDRESS /proc/$pid/environ)
 
-    [ "$1" = "00000000" ] && do_notif "Power Adapter:" "Disconnected" #&& play_sound "$1"
-    [ "$1" = "00000001" ] && do_notif "Power Adapter:" "Connected"
-    
+    [ "$1" = "00000000" ] && do_notif "Power" "Power Adapter Disconnected" "Profile changed to Power-saver" #&& play_sound "$1"
+    [ "$1" = "00000001" ] && do_notif "Power" "Power Adapter Connected" "Profile changed to Balanced"
+    [ "$1" = "brightness" ] && su $USER -c "/home/$USER/.local/bin/dunst_backlight"
 }
 
 # dunstify as root
 do_notif() {
     su $USER -c "dunstify \
-	    -a \"Power\" \
-	    \"$1\" \
+	    -a \"$1\" \
 	    \"$2\" \
-	    -r 999 \
+	    \"$3\" \
+	    -r 953 \
 	    -t 10000"
 }
 
@@ -79,6 +79,10 @@ step_backlight() {
 		else
 			printf '%s' "$new_brightness" >$brightness_file
 		fi
+		
+		percent=$(( new_brightness * 100 / max_brightness ))
+
+		notify_send brightness
 	done
 }
 
@@ -86,7 +90,6 @@ step_backlight() {
 set_energy_profile() {
     for policy in /sys/devices/system/cpu/cpufreq/*/; do
         [ -d "$policy" ] || continue
-        curr_prof=$(cat "$policy/energy_performance_preference")
         if [ "$1" = "AC" ]; then
             printf '%s' 'balance_performance' >"$policy/energy_performance_preference"
         elif [ "$1" = "BATTERY" ]; then
@@ -116,7 +119,7 @@ case "$1" in
             SBTN|SLPB)
                 # suspend-to-ram
                 logger "Sleep Button pressed: $2, suspending..."
-		# lock first then sleep
+		# lock first then suspend
 		lock
 		sleep 1
 		zzz

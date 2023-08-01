@@ -23,13 +23,13 @@ PKGS_REPOS="void-repo-nonfree void-repo-multilib void-repo-multilib-nonfree"
 PKGS_STEAM="steam libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit mesa-dri-32bit"
 PKGS_STEAM_NVIDIA="nvidia nvidia-vaapi-driver nvidia-libs-32bit"
 
-PKGS_GUI="alacritty geany mpv easyeffects rofi Kooha"
-PKGS_CLI="htop ncdu neovim xclip xcolor btop ranger nvtop intel-gpu-tools"
-PKGS_UTILS="git jq fzf ImageMagick ripgrep yt-dlp gcc tree ffmpeg intel-undervolt"
+PKGS_GUI="alacritty gimp fsearch rofi-calc rofi-emoji geany mpv easyeffects rofi Kooha"
+PKGS_CLI="htop ncdu neovim btop ranger nvtop intel-gpu-tools sysbench"
+PKGS_UTILS="git jq fzf ImageMagick xclip ripgrep yt-dlp gcc tree ffmpeg intel-undervolt vsftpd wget xorg-server-xephyr tesseract-ocr tesseract-ocr-ell tesseract-ocr-eng"
 PKGS_3D="MangoHud lutris gamemode"
 PKGS_SUM="$PKGS_GUI $PKGS_CLI $PKGS_UTILS $PKGS_3D"
 
-PKGS_FONTS="font-awesome6 font-material-design-icons-ttf dejavu-fonts-ttf noto-fonts-emoji terminus-font"
+PKGS_FONTS="font-awesome6 font-material-design-icons-ttf dejavu-fonts-ttf noto-fonts-emoji terminus-font wqy-microhei"
 
 FLATPAKS="com.anydesk.Anydesk \
 com.brave.Browser \
@@ -62,6 +62,7 @@ menu() {
 	yellow " 3: Install Virt-manager"
 	yellow " 4: Install a collection of apps"
 	yellow " 5: Install a collection of flatpaks"
+	yellow " 6: Install a collection of fonts"
 	yellow " 0: Exit"
 	read -p "Enter a number: " choice
 }
@@ -127,6 +128,16 @@ install_pkgs() {
 	fi
 }
 
+install_fonts() {
+	yellow "Do you want to: Install Fonts?   [y/N]"
+	yellow "PKGS: $PKGS_FONTS"
+	read -r dm
+	if [[ "$dm" == [Y/y] ]]; then
+		sudo xbps-install -Sy $PKGS_FONTS
+		green "Fonts installed!\n"
+	fi
+}
+
 install_virtmanager() {
 	yellow "Do you want to: Install KVM (virt-manager)?   [y/N]"
 	read -r dm
@@ -156,9 +167,12 @@ while true; do
 		4)
 			install_pkgs
 		;;
-        5)
-            install_flatpaks
-        ;;
+    5)
+      install_flatpaks
+    ;;
+    6)
+      install_fonts
+    ;;
 		0)
 			green "Bye bye!"
 			exit 0

@@ -60,19 +60,18 @@
 # dmenu
 # xwallpaper
 # polkit-gnome
-# sysstat
 ###############################################################################################
 
-COMMON="intel-ucode NetworkManager dbus elogind power-profiles-daemon xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit bluez gvfs"
-X11="xorg-minimal xrandr xrdb xinput xclip xprop setxkbmap xsetroot"
+COMMON="intel-ucode NetworkManager dbus elogind power-profiles-daemon xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit gvfs bluez libspa-bluetooth"
+X11="xorg-minimal xrandr xrdb xinput xclip xprop setxkbmap xsetroot xdotool"
 VGA="mesa-dri intel-video-accel mesa-intel-dri mesa-vulkan-intel"
 PKGS_BASE="$X11 $COMMON $VGA"
 
-PKGS_GNOME="gnome-core eog gnome-tweaks dconf-editor alacritty"
+PKGS_GNOME="gnome-core eog file-roller gnome-tweaks dconf-editor alacritty"
 PKGS_PLASMA="kde5 dolphin konsole"
-PKGS_WM="gnome-keyring polkit-gnome upower alacritty pcmanfm feh mpv dmenu rofi lxappearance dunst xwallpaper dejavu-fonts-ttf picom maim"
+PKGS_WM="gnome-keyring polkit-gnome upower pcmanfm sxhkd mpv dmenu rofi lxappearance dunst xwallpaper dejavu-fonts-ttf picom maim playerctl"
 PKGS_DWM="base-devel libX11-devel libXft-devel libXinerama-devel pango-devel fontconfig-devel freetype-devel"
-PKGS_I3="i3 i3status i3blocks i3lock sysstat"
+PKGS_I3="i3 alacritty i3status i3blocks i3lock"
 PKGS_SWAY="sway swaylock swayidle i3blocks"
 
 echo -e "\e[1;32m Is this a VM?  [y/N]"
@@ -136,7 +135,8 @@ case $variant in
 		echo -e "\e[1;32m Suckless DWM dependencies installation..\e[0m"; sleep 3
 		PKGS="$PKGS_BASE $PKGS_WM $PKGS_DWM"
 		sudo xbps-install -y $PKGS
-        # git clone <dwm st etc..>
+    # install: dwmblocks, st
+    # git clone <dwm st etc..>
 		# cd <repodir>
 		# sudo make clean install
 	;;

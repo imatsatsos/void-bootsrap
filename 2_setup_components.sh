@@ -152,6 +152,21 @@ setup_voidsrcpkgs() {
         green "Done. \n"
     fi
 }
+
+setup_bluetooth() {
+ 	yellow "Do you want to setup Bluetooth?  [y/N]"
+	read -r dm
+	if [[ "$dm" == [Y/y] ]]; then
+
+        yellow "Installing bluetooth and libspa-bluetooth"
+        sleep 2
+        sudo xbps-install -Sy bluez libspa-bluetooth
+        sleep 1
+        sudo ln -s /etc/sv/bluetoothd /var/service/
+        green "Bluetooth installed!"
+    fi
+}
+
 # RUN
 yellow "Welcome! This script will setup various system components on a Void Linux installation."
 while true; do
@@ -167,12 +182,15 @@ while true; do
 			install_nvidia
 		;;
 		4)
-			install_envycontrol
-        ;;
-        5)
-            setup_voidsrcpkgs
-        ;;
-        0)
+      install_envycontrol
+      ;;
+    5)
+      setup_voidsrcpkgs
+      ;;
+    6)
+      setup_bluetooth
+      ;;
+    0)
 			green "Bye bye!"
 			exit 0
 		;;

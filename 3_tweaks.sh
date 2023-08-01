@@ -206,11 +206,12 @@ sv_intel_undervolt() {
     sudo cp -v ./resources/etc/intel-undervolt.conf /etc/intel-undervolt.conf
     if [ -d "/etc/sv/intel-undervolt/" ]; then
 		box "! intel-undervolt service already configured \n"
-	else
+	  else
 		sudo mkdir -p /etc/sv/intel-undervolt/
 		sudo cp -fv ./resources/intel-undervolt/run /etc/sv/intel-undervolt/run
 		sudo chmod +x /etc/sv/intel-undervolt/run
 		sudo ln -s /etc/sv/intel-undervolt /var/service/
+    sudo cp -f ./resources/etc/zzz.d/1-intel-undervolt.sh /etc/zzz.d/resume/
 		box "Done \n"
     fi
 }
