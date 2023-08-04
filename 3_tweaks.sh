@@ -229,6 +229,11 @@ sudo sed -i.bak 's/^#FONT=.*/FONT="ter-120b"/' /etc/rc.conf
 box "Done \n"
 
 
+## Fix blurry fonts
+sudo ln -s /usr/share/fontconfig/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d/
+sudo xbps-reconfigure -f fontconfig
+
+
 ### Purge old kernels
 boxf "> Purging old kernels.."
 sleep 2
@@ -255,7 +260,7 @@ fi
 ### Grub changes ###
 boxf "> Grub tweaks: silence, speed-up, logo, disable mitigations, disable watchdog"
 sleep 2
-sudo sed -i.bak 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&quiet loglevel=3 rd.udev.log_level=3 console=tty2 mitigations=off nowatchdog nmi_watchdog=0 fbcon=nodefer /' /etc/default/grub
+sudo sed -i.bak 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&quiet loglevel=3 udev.log_level=3 console=tty2 mitigations=off nowatchdog nmi_watchdog=0 fbcon=nodefer /' /etc/default/grub
 sudo sed -i 's/GRUB_TIMEOUT.*/GRUB_TIMEOUT=1/' /etc/default/grub
 sudo sed -i 's/^#GRUB_BACKGROUND/GRUB_BACKGROUND/' /etc/default/grub
 sudo grub-mkconfig -o /boot/grub/grub.cfg
