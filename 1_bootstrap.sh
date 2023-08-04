@@ -60,6 +60,7 @@
 # dmenu
 # xwallpaper
 # polkit-gnome
+# nsxiv
 ###############################################################################################
 
 COMMON="intel-ucode NetworkManager dbus elogind power-profiles-daemon xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit gvfs bluez libspa-bluetooth"
@@ -69,16 +70,18 @@ PKGS_BASE="$X11 $COMMON $VGA"
 
 PKGS_GNOME="gnome-core eog file-roller gnome-tweaks dconf-editor alacritty"
 PKGS_PLASMA="kde5 dolphin konsole"
-PKGS_WM="gnome-keyring polkit-gnome upower pcmanfm sxhkd mpv dmenu rofi lxappearance dunst xwallpaper dejavu-fonts-ttf picom maim playerctl"
-PKGS_DWM="base-devel libX11-devel libXft-devel libXinerama-devel pango-devel fontconfig-devel freetype-devel"
+PKGS_WM="gnome-keyring polkit-gnome upower pcmanfm sxhkd mpv dmenu rofi lxappearance dunst xwallpaper dejavu-fonts-ttf picom nsxiv maim playerctl"
+PKGS_DWM="base-devel libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel"
 PKGS_I3="i3 alacritty i3status i3blocks i3lock"
 PKGS_SWAY="sway swaylock swayidle i3blocks"
 
 echo -e "\e[1;32m Is this a VM?  [y/N]"
 read flag_vm
+
 # Fewer pkgs and VM drivers [MORE TEST NEEDED]
 if [[ "$flag_vm" == [Y/y] ]]; then
-	VGA="mesa-dri xf86-video-qxl"
+	#VGA="mesa-dri"
+	VGA=" "
 	COMMON="NetworkManager dbus elogind xdg-user-dirs xdg-utils pipewire wireplumber alsa-utils rtkit gvfs"
 	PKGS_BASE="$X11 $COMMON $VGA"
 fi
@@ -98,6 +101,7 @@ echo -e "\e[1;32m 1: Gnome"
 echo -e "\e[1;32m 2: Plasma"
 echo -e "\e[1;32m 3: dwm"
 echo -e "\e[1;32m 4: i3"
+echo -e "\e[1;32m 5: Sway"
 read -p "number: " variant
 
 
@@ -116,47 +120,48 @@ sudo xbps-install -Suy
 case $variant in
 	# 1: GNOME
 	1)
-		PKGS="$PKGS_BASE $PKGS_GNOME"
-		DM="gdm"
-		echo -e "\e[1;32m  Minimal GNOME DE installation..\e[0m"; sleep 3
-		sudo xbps-install -y $PKGS
+	PKGS="$PKGS_BASE $PKGS_GNOME"
+	DM="gdm"
+	echo -e "\e[1;32m  Minimal GNOME DE installation..\e[0m"; sleep 3
+	sudo xbps-install -y $PKGS
 	;;
-	
+
 	# 2: PLASMA
 	2)
-		PKGS="$PKGS_BASE $PKGS_PLASMA"
-		DM="sddm"
-		echo -e "\e[1;32m  Minimal PLASMA DE installation..\e[0m"; sleep 3
-		sudo xbps-install -y $PKGS
+	PKGS="$PKGS_BASE $PKGS_PLASMA"
+	DM="sddm"
+	echo -e "\e[1;32m  Minimal PLASMA DE installation..\e[0m"; sleep 3
+	sudo xbps-install -y $PKGS
 	;;
-	
+
 	# 3: DWM (suckless)
 	3)
-		echo -e "\e[1;32m Suckless DWM dependencies installation..\e[0m"; sleep 3
-		PKGS="$PKGS_BASE $PKGS_WM $PKGS_DWM"
-		sudo xbps-install -y $PKGS
-    # install: dwmblocks, st
-    # git clone <dwm st etc..>
-		# cd <repodir>
-		# sudo make clean install
+	echo -e "\e[1;32m Suckless DWM dependencies installation..\e[0m"; sleep 3
+	PKGS="$PKGS_BASE $PKGS_WM $PKGS_DWM"
+	sudo xbps-install -y $PKGS
+	git clone https://github.com/imatsatsos/suckless.git
+	# install: dwmblocks, st
+	# git clone <dwm st etc..>
+	# cd <repodir>
+	# sudo make clean install
 	;;
-    
+
     # 4: i3
     4)
-        echo -e "\e[1;32m Minimal i3 installation..\e[0m"; sleep 3
-        PKGS="$PKGS_BASE $PKGS_WM $PKGS_I3"
-        sudo xbps-install -y $PKGS
+    echo -e "\e[1;32m Minimal i3 installation..\e[0m"; sleep 3
+    PKGS="$PKGS_BASE $PKGS_WM $PKGS_I3"
+    sudo xbps-install -y $PKGS
     ;;
-	
+
     # 5: Sway
     5)
-        echo -e "\e[1;32m Minimal Sway installation..\e[0m"; sleep 3
-        PKGS="$COMMON $VGA $PKGS_WM $PKGS_SWAY"
-        sudo xbps-install -y $PKGS
+    echo -e "\e[1;32m Minimal Sway installation..\e[0m"; sleep 3
+    PKGS="$COMMON $VGA $PKGS_WM $PKGS_SWAY"
+    sudo xbps-install -y $PKGS
     ;;
-    *)
-		echo -e "\e[1;31mInvalid variant.\e[0m"
-		exit 1
+*)
+	echo -e "\e[1;31mInvalid variant.\e[0m"
+	exit 1
 	;;
 esac	
 
@@ -191,11 +196,12 @@ xdg-user-dirs-update
 
 echo -e "\e[1;32m------------- DONE! -------------\e[0m"; sleep 2
 if [[ $variant -eq 3 ]]; then
+	cp ./resources/.xinitrc /home/$USER/
 	echo -e "\e[1;32mYou use suckless, you know how to proceed. ;)\e[0m"
-	echo -e "   \e[1;32m$ an example .xinitrc is created, edit it and run startx!\e[0m"
+	echo -e "   \e[1;32m an example .xinitrc is created, edit it and run startx!\e[0m"
 elif [[ $variant -eq 4 ]]; then
 	cp ./resources/.xinitrc /home/$USER/
-	echo -e "   \e[1;32m$.xinitrc for i3 created, run startx!\e[0m"
+	echo -e "   \e[1;32m an example .xinitrc is created, edit it and run startx!\e[0m"
 else
 	sudo ln -sv "/etc/sv/$DM" /var/service
 	echo -e "   \e[1;32m$DM will start shortly.\e[0m"
