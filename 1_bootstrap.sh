@@ -196,11 +196,11 @@ xdg-user-dirs-update
 
 echo -e "\e[1;32m------------- DONE! -------------\e[0m"; sleep 2
 if [[ $variant -eq 3 ]]; then
-	cp ./resources/.xinitrc /home/$USER/
+	cp ./resources/.xinitrc /home/"$USER"/
 	echo -e "\e[1;32mYou use suckless, you know how to proceed. ;)\e[0m"
 	echo -e "   \e[1;32m an example .xinitrc is created, edit it and run startx!\e[0m"
 elif [[ $variant -eq 4 ]]; then
-	cp ./resources/.xinitrc /home/$USER/
+	cp ./resources/.xinitrc /home/"$USER"/
 	echo -e "   \e[1;32m an example .xinitrc is created, edit it and run startx!\e[0m"
 else
 	sudo ln -sv "/etc/sv/$DM" /var/service

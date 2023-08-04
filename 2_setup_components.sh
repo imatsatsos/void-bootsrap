@@ -37,7 +37,7 @@ menu() {
 }
 
 command_exists () {
-	command -v $1 >/dev/null 2>&1;
+	command -v "$1" >/dev/null 2>&1;
 }
 
 
@@ -125,8 +125,8 @@ install_envycontrol() {
 		sleep 2
 		git clone https://github.com/bayasdev/envycontrol.git
 		[ ! -d ./envycontrol/ ] && red "! git clone failed" && return
-		[ ! -d /home/$USER/.local/bin/ ] && mkdir -p /home/$USER/.local/bin/
-		cp -f ./envycontrol/envycontrol.py /home/$USER/.local/bin/
+		[ ! -d /home/"$USER"/.local/bin/ ] && mkdir -p /home/"$USER"/.local/bin/
+		cp -f ./envycontrol/envycontrol.py /home/"$USER"/.local/bin/
 		rm -rf ./envycontrol/
 		green "Done. envycontrol is installed in ~/.local/bin\n"
 	fi
@@ -141,11 +141,11 @@ setup_voidsrcpkgs() {
 		sleep 2
 		# dependencies
 		sudo xbps-install -Sy git curl
-		mkdir -p $HOME/Gitrepos
-		cd $HOME/Gitrepos
+		mkdir -p "$HOME"/Gitrepos
+		cd "$HOME"/Gitrepos
 		git clone --depth 1 https://github.com/void-linux/void-packages.git
 		[ ! -d ./void-packages/ ] && red "! git clone failed" && return
-		$HOME/Gitrepos/void-packages/xbps-src binary-bootstrap
+		"$HOME"/Gitrepos/void-packages/xbps-src binary-bootstrap
 		sudo xbps-install -Sy xtools
 		cd -
 		yellow "Usage: ./xbps-src pkg 'name' to build from a template"
