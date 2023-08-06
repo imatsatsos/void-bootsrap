@@ -134,7 +134,7 @@ box "Done \n"
 boxf "> Removing useless packages.."
 sleep 2
 sudo cp -v ./resources/etc/99-ignored-pkgs.conf /etc/xbps.d/99-ignored-pkgs.conf
-sudo xbps-remove -Fy linux-firmware-amd linux-firmware-broadcom mobile-broadband-provider-info ipw2200-firmware ipw2100-firmware
+sudo xbps-remove -Fy mdadm linux-firmware-amd linux-firmware-broadcom mobile-broadband-provider-info ipw2200-firmware ipw2100-firmware
 box "Done \n"
 
 
@@ -147,14 +147,14 @@ sudo cp -v ./resources/udev/60-ioschedulers.rules /etc/udev/rules.d/60-ioschedul
 box "Done \n"
 
 
-## Setup gnome-keyring to autounlock on login using PAM
+## Setup gnome-keyring to autounlock on login using PAM ###
 boxf "> Making gnome-keyring auto-unlock when used with a WM"
 sleep 2
 sudo cp -fv ./resources/etc/login /etc/pam.d/
 box "Done \n"
 
 
-### Set ntfs3 kernel mod for default ntfs mounting
+### Set ntfs3 kernel mod for default ntfs mounting ###
 boxf "> Setting ntfs3 kernel by default for mounting ntfs drives.."
 sleep 2
 [ ! -d /etc/udev/rules.d/ ] && sudo mkdir -p /etc/udev/rules.d/
@@ -170,7 +170,7 @@ sudo cp -v ./resources/modprobe/modprobe.conf /etc/modprobe.d/modprobe.conf
 box "Done \n"
 
 
-### Set xorg confs (mouse accel, touchpad, keyboard, benq-res, etc)
+### Set xorg confs (mouse accel, touchpad, keyboard, benq-res, etc) ###
 boxf "> Setting xorg.conf.d.."
 sleep 2
 [ ! -d /etc/X11/xorg.conf.d ] && sudo mkdir -p /etc/X11/xorg.conf.d/
@@ -178,7 +178,7 @@ sudo cp -v ./resources/xorg/* /etc/X11/xorg.conf.d/
 box "Done \n"
 
 
-### Optimize Intel Graphics with modprobe
+### Optimize Intel Graphics with modprobe ###
 ## according to arch wiki fastboot and enabl_fbc are enabled for my chip (coffe lake)
 boxf "> Optimizing Intel Graphics with modprobe.."
 sleep 2
@@ -219,7 +219,7 @@ echo "$(whoami) hard nofile 524288" | sudo tee -a /etc/security/limits.conf
 box "Done \n"
 
 
-### rc.conf changes
+### rc.conf changes ###
 boxf "> Setting terminus 20b tty font.."
 sleep 2
 if [ ! -f /usr/share/kbd/consolefonts/ter-120b.psf.gz ]; then
@@ -229,12 +229,12 @@ sudo sed -i.bak 's/^#FONT=.*/FONT="ter-120b"/' /etc/rc.conf
 box "Done \n"
 
 
-## Fix blurry fonts
+## Fix blurry fonts ###
 sudo ln -s /usr/share/fontconfig/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d/
 sudo xbps-reconfigure -f fontconfig
 
 
-### Purge old kernels
+### Purge old kernels ###
 boxf "> Purging old kernels.."
 sleep 2
 sudo xbps-remove -y linux5.19 2>&1
@@ -260,7 +260,7 @@ fi
 ### Grub changes ###
 boxf "> Grub tweaks: silence, speed-up, logo, disable mitigations, disable watchdog"
 sleep 2
-sudo sed -i.bak 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&quiet loglevel=3 udev.log_level=3 console=tty2 mitigations=off nowatchdog nmi_watchdog=0 fbcon=nodefer /' /etc/default/grub
+sudo sed -i.bak 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&quiet loglevel=3 udev.log_level=3 console=tty2 mitigations=off nowatchdog nmi_watchdog=0 msr.allow_writes=on fbcon=nodefer /' /etc/default/grub
 sudo sed -i 's/GRUB_TIMEOUT.*/GRUB_TIMEOUT=1/' /etc/default/grub
 sudo sed -i 's/^#GRUB_BACKGROUND/GRUB_BACKGROUND/' /etc/default/grub
 sudo grub-mkconfig -o /boot/grub/grub.cfg
@@ -275,7 +275,7 @@ box "Done \n"
 
 
 ### Load GNOME Settings ###
-currentDE="$( echo $XDG_CURRENT_DESKTOP )"
+currentDE=$XDG_CURRENT_DESKTOP
 case $currentDE in
     "GNOME")
         boxf "\e[1;31m> Next step will load GNOME settings, is this ok? [y/N]"
