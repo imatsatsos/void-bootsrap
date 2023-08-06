@@ -139,9 +139,11 @@ case $variant in
 	echo -e "\e[1;32m Suckless DWM dependencies installation..\e[0m"; sleep 3
 	PKGS="$PKGS_BASE $PKGS_WM $PKGS_DWM"
 	sudo xbps-install -y $PKGS
-	git clone https://github.com/imatsatsos/suckless.git
-	# install: dwmblocks, st
-	# git clone <dwm st etc..>
+	git clone https://github.com/imatsatsos/dwm
+	git clone https://github.com/imatsatsos/dwmblocks-async
+	git clone https://github.com/imatsatsos/dmenu
+	git clone https://github.com/imatsatsos/st
+	# git clone suckless repo
 	# cd <repodir>
 	# sudo make clean install
 	;;

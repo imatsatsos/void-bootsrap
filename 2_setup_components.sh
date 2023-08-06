@@ -32,6 +32,9 @@ menu() {
 	yellow " 3: Install NVIDIA drivers"
 	yellow " 4: Install/update Envycontrol"
 	yellow " 5: Setup Void source pkgs"
+	yellow " 6: Setup bluetooth"
+	yellow " 7: Setup logs"
+	yellow " 8: Setup NIX package manager"
 	yellow " 0: Exit"
 	read -p "Enter a number: " choice
 }
@@ -60,6 +63,7 @@ setup_audio() {
 		#echo 'context.exec = [ { path = "/usr/bin/wireplumber" args = "" } ]' | sudo tee /etc/pipewire/pipewire.conf.d/10-wireplumber.conf
 		# VOID-DOCS method
 		[ -f /etc/pipewire/pipewire.conf.d/10-wireplumber.conf ] && sudo rm -f /etc/pipewire/pipewire.conf.d/10-wireplumber.conf
+		[ -f /etc/pipewire/pipewire.conf.d/20-pipewire-pulse.conf ] && sudo rm -f /etc/pipewire/pipewire.conf.d/20-pipewire-pulse.conf
 		sudo ln -s /usr/share/examples/wireplumber/10-wireplumber.conf /etc/pipewire/pipewire.conf.d/
 		## make pipewire-pulse autostart from pipewire
 		sudo ln -s /usr/share/examples/pipewire/20-pipewire-pulse.conf /etc/pipewire/pipewire.conf.d/
@@ -67,7 +71,7 @@ setup_audio() {
 		sudo cp -f /usr/share/applications/pipewire-pulse.desktop /etc/xdg/autostart/
 		sudo cp -f /usr/share/applications/pipewire.desktop /etc/xdg/autostart/
 		green "Audio is setup and will autostart for DEs!\n"
-		green "For WMs: make sure to run pipewire and pipewire-pulse in your autostart\n"
+		green "For WMs: make sure to run pipewire in your autostart.\n"
 	fi
 }
 
@@ -165,6 +169,34 @@ setup_bluetooth() {
 	fi
 }
 
+setup_logs() {
+	yellow "Do you want to setup Logs (socklog-void)?  [y/N]"
+	read -r dm
+	if [[ "$dm" == [Y/y] ]]; then
+
+		yellow "Installing socklog-void"
+		sleep 2
+		sudo xbps-install -Sy socklog-void
+		sleep 1
+		sudo ln -s /etc/sv/socklog-unix /var/service/
+		sudo ln -s /etc/sv/nanoklogd /var/service
+		green "Logs enabled, see them with svlogtail!"
+	fi
+}
+
+setup_nix() {
+	yellow "Do you want to setup the NIX package manager?  [y/N]"
+	read -r dm
+	if [[ "$dm" == [Y/y] ]]; then
+
+		yellow "Installing nix package manager"
+		sleep 2
+		sh <(curl -L https://nixos.org/nix/install) --no-daemon
+		sleep 1
+		green "NIX is now installed! Make sure to check your .bash_profile."
+	fi
+}
+
 # RUN
 yellow "Welcome! This script will setup various system components on a Void Linux installation."
 while true; do
@@ -187,6 +219,12 @@ while true; do
 			;;
 		6)
 			setup_bluetooth
+			;;
+		7)
+			setup_logs
+			;;
+		8)
+			setup_nix
 			;;
 		0)
 			green "Bye bye!"
