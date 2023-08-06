@@ -55,17 +55,14 @@ setup_audio() {
 		[ ! -d /etc/pipewire/ ] && sudo mkdir -p /etc/pipewire/
 		[ ! -d /etc/pipewire/pipewire.conf.d/ ] && sudo mkdir -p /etc/pipewire/pipewire.conf.d/
 
-		#! NOT NEEDED as of 30 May 2023 ( https://voidlinux.org/news/2023/05/audio-breakage.html )
-		# copy pipewire config to disable the default media session
-		#sudo cp -f /usr/share/pipewire/pipewire.conf /etc/pipewire/pipewire.conf
-		#sudo sed -i '/path.*=.*pipewire-media-session/s/{/#{/' /etc/pipewire/pipewire.conf
-
 		## make wireplumber autostart from pipewire
-		# another method
+		# MANUAL method
 		#echo 'context.exec = [ { path = "/usr/bin/wireplumber" args = "" } ]' | sudo tee /etc/pipewire/pipewire.conf.d/10-wireplumber.conf
-		# void docs method
+		# VOID-DOCS method
 		[ -f /etc/pipewire/pipewire.conf.d/10-wireplumber.conf ] && sudo rm -f /etc/pipewire/pipewire.conf.d/10-wireplumber.conf
 		sudo ln -s /usr/share/examples/wireplumber/10-wireplumber.conf /etc/pipewire/pipewire.conf.d/
+		## make pipewire-pulse autostart from pipewire
+		sudo ln -s /usr/share/examples/pipewire/20-pipewire-pulse.conf /etc/pipewire/pipewire.conf.d/
 		# create autostart .desktop files
 		sudo cp -f /usr/share/applications/pipewire-pulse.desktop /etc/xdg/autostart/
 		sudo cp -f /usr/share/applications/pipewire.desktop /etc/xdg/autostart/
