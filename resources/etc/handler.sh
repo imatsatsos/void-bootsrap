@@ -12,8 +12,8 @@ notify_send() {
     eval export $(grep -z ^DISPLAY /proc/$pid/environ)
     eval export $(grep -z ^DBUS_SESSION_BUS_ADDRESS /proc/$pid/environ)
 
-    [ "$1" = "00000000" ] && do_notif "Power" "Power Adapter Disconnected" "Profile changed to Power-saver" #&& play_sound "$1"
-    [ "$1" = "00000001" ] && do_notif "Power" "Power Adapter Connected" "Profile changed to Balanced"
+    [ "$1" = "00000000" ] && do_notif "Power" "Power Adapter Disconnected" "Profile set to Power-saver, brightness reduced." #&& play_sound "$1"
+    [ "$1" = "00000001" ] && do_notif "Power" "Power Adapter Connected" "Profile set to Balanced, brightness increased."
     [ "$1" = "brightness" ] && su $USER -c "/home/$USER/.local/bin/dunst_backlight"
 }
 
@@ -35,7 +35,7 @@ play_sound() {
     eval export $(grep -z ^DBUS_SESSION_BUS_ADDRESS /proc/$pid/environ)
     sounds="/usr/share/sounds/freedesktop/stereo/"
     if [ "$1" = "00000000" ]; then
-	su john -c "paplay $sounds/power-unplug.oga"
+	su $USER -c "paplay $sounds/power-unplug.oga"
 	echo its0
     elif [ "$1" = "00000001" ]; then
         echo its1

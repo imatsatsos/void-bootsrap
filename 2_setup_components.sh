@@ -1,13 +1,16 @@
 #!/bin/bash
 # AUTHOR: imatsatsos
-# This script setups various system components on a Void Linux installation
-# These currently include:
-# AUDIO: pipewire with wireplumber server and alsa-utils
-# ACPID: setup acpid to handle acpi events and disable them for elogind to 
-#  not interfere with each other. Some extra bling included
-# NVIDIA: install drivers for nvidia 
-# ENVYCONTROL: utility to toggle integrated and NVIDIA gpu
-
+# This script setups various system components on a Void Linux installation:
+# Audio: pipewire with wireplumber server and alsa-utils.
+# Acpid: setup acpid to handle acpi events and disable them for elogind to not interfere with each other.
+# NVIDIA: install drivers for nvidia.
+# Envycontrol: utility to toggle integrated and NVIDIA gpu.
+# Void Source packages: Enable's building and installing packages from the Void source packages github repository.
+# Void Source repository.
+# Bluetooth and bluetooth audio.
+# System-wide logs service.
+# Nix package manager.
+# Flatpak.
 
 yellow() {
 	title="$1"
@@ -35,6 +38,8 @@ menu() {
 	yellow " 6: Setup bluetooth"
 	yellow " 7: Setup logs"
 	yellow " 8: Setup NIX package manager"
+	yellow " 9: Setup flatpak"
+	yellow " 10: Setup virt-manager"
 	yellow " 0: Exit"
 	read -p "Enter a number: " choice
 }
@@ -58,17 +63,12 @@ setup_audio() {
 		[ ! -d /etc/pipewire/ ] && sudo mkdir -p /etc/pipewire/
 		[ ! -d /etc/pipewire/pipewire.conf.d/ ] && sudo mkdir -p /etc/pipewire/pipewire.conf.d/
 
-		## make wireplumber autostart from pipewire
-		# MANUAL method
-		#echo 'context.exec = [ { path = "/usr/bin/wireplumber" args = "" } ]' | sudo tee /etc/pipewire/pipewire.conf.d/10-wireplumber.conf
-		# VOID-DOCS method
+		## make wireplumber and pipewire-pulse autostart from pipewire
 		[ -f /etc/pipewire/pipewire.conf.d/10-wireplumber.conf ] && sudo rm -f /etc/pipewire/pipewire.conf.d/10-wireplumber.conf
 		[ -f /etc/pipewire/pipewire.conf.d/20-pipewire-pulse.conf ] && sudo rm -f /etc/pipewire/pipewire.conf.d/20-pipewire-pulse.conf
 		sudo ln -s /usr/share/examples/wireplumber/10-wireplumber.conf /etc/pipewire/pipewire.conf.d/
-		## make pipewire-pulse autostart from pipewire
 		sudo ln -s /usr/share/examples/pipewire/20-pipewire-pulse.conf /etc/pipewire/pipewire.conf.d/
 		# create autostart .desktop files
-		sudo cp -f /usr/share/applications/pipewire-pulse.desktop /etc/xdg/autostart/
 		sudo cp -f /usr/share/applications/pipewire.desktop /etc/xdg/autostart/
 		green "Audio is setup and will autostart for DEs!\n"
 		green "For WMs: make sure to run pipewire in your autostart.\n"
@@ -197,6 +197,62 @@ setup_nix() {
 	fi
 }
 
+install_virtmanager() {
+	yellow "Do you want to: Install KVM (virt-manager)?   [y/N]"
+	read -r dm
+	if [[ "$dm" == [Y/y] ]]; then
+		sudo xbps-install -Sy libvirtd virt-manager qemu
+		sudo ln -s /etc/sv/libvirtd/ /var/service/
+		sudo ln -s /etc/sv/virtlogd/ /var/service/
+		sudo usermod -a -G libvirt $(whoami)
+		green "Virt-manager installed!\n"
+	fi
+}
+
+setup_flatpak() {
+	yellow "Do you want to: Setup Flatpak?    [y/N]"
+	read -r dm
+	if [[ "$dm" == [Y/y] ]]; then
+		sudo xbps-install -Sy flatpak; sleep 0.5
+		if command -v flatpak >/dev/null 2>&1; then
+			flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo; sleep 0.5
+			flatpak update --appstream
+			green "Flatpak installed!\n"
+			install_flatpaks
+		else
+			red "! ERROR: package flatpak is not installed.."
+			fi
+		fi
+	}
+
+FLATPAKS="com.anydesk.Anydesk \
+	com.brave.Browser \
+	com.github.tchx84.Flatseal \
+	com.spotify.Client \
+	fr.handbrake.ghb \
+	net.cozic.joplin_desktop \
+	org.qbittorrent.qBittorrent \
+	org.signal.Signal"
+
+install_flatpaks() {
+	yellow "Do you want to: Install a collection of flatpaks?    [y/N]"
+	yellow "FLATPAKS: $FLATPAKS"
+	read -r dm
+	if [[ "$dm" == [Y/y] ]]; then
+		if command -v flatpak >/dev/null 2>&1; then
+			if [[ $(flatpak remotes | grep -c flathub) -eq 0 ]]; then
+				flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo; sleep 0.5
+				fi
+				for fp in $FLATPAKS;
+				do
+					flatpak install -y flathub $fp
+				done
+			else
+				red "Setup Flatpak first!"
+			fi
+		fi
+	}
+
 # RUN
 yellow "Welcome! This script will setup various system components on a Void Linux installation."
 while true; do
@@ -225,6 +281,12 @@ while true; do
 			;;
 		8)
 			setup_nix
+			;;
+		9)
+			setup_flatpak
+			;;
+		10)
+			install_virtmanager
 			;;
 		0)
 			green "Bye bye!"

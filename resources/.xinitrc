@@ -22,7 +22,8 @@ fi
 [ -f ~/.xprofile ] && . ~/.xprofile
 
 # set X11 screen resolution
-xrandr -s 1920x1080
+#xrandr -s 1920x1080
+xrdb -merge "$HOME"/.Xresources
 
 # set some X11 env variables
 export XDG_SESSION_TYPE="x11"
@@ -33,16 +34,14 @@ export DBUS_SESSION_BUS_ADDRESS
 
 # WM apps
 pidof -sx "pipewire" || pipewire &
-# disabled cause i start pipewire-pulse using /usr/share/pipewire/pipewire.conf last line
-#pidof -sx "pipewire-pulse" || pipewire-pulse &
 export $(gnome-keyring-daemon --start --components=pkcs11,secrets,gpg)
 pidof -sx "polkit-gnome-authentication-agent-1" || "/usr/libexec/polkit-gnome-authentication-agent-1" &
-pidof -sx "dwmblocks" || dwmblocks -b &
 pidof -sx "low_battery" || low_battery &
-pidof -sx "picom" || picom -b &
+#pidof -sx "picom" || picom -b &
 xwallpaper --maximize ~/.config/background &
 pidof -sx "onlogin.sh" || onlogin.sh &
 pidof -sx "sxhkd" || sxhkd &
+pidof -sx "dwmblocks" || dwmblocks -b &
 
 # update dbus environment variables
 #dbus-update-activation-environment --systemd DBUS_SESSION_BUS_ADDRESS DISPLAY XAUTHORITY
@@ -54,5 +53,5 @@ dbus-update-activation-environment DBUS_SESSION_BUS_ADDRESS DISPLAY XAUTHORITY
 #done >/dev/null 2>&1
 
 ## start window-manager
-exec dbus-run-session /usr/local/bin/dwm
-# exec dbus-run-session /usr/bin/i3
+exec dbus-run-session /usr/local/bin/dwm #2>"$HOME"/.dwmlog
+#exec dbus-run-session /usr/bin/i3

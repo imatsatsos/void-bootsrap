@@ -179,7 +179,7 @@ box "Done \n"
 
 
 ### Optimize Intel Graphics with modprobe ###
-## according to arch wiki fastboot and enabl_fbc are enabled for my chip (coffe lake)
+## according to arch wiki fastboot and enable_fbc are enabled for my chip (coffe lake)
 boxf "> Optimizing Intel Graphics with modprobe.."
 sleep 2
 [ ! -d /etc/modprobe.d/ ] && mkdir -p /etc/modprobe.d/
@@ -204,6 +204,7 @@ else
     sudo chmod +x /etc/sv/intel-undervolt/run
     sudo ln -s /etc/sv/intel-undervolt /var/service/
     sudo cp -f ./resources/etc/zzz.d/1-intel-undervolt.sh /etc/zzz.d/resume/
+    sudo cp -f ./resources/libexec/00-intel-undervolt.sh /usr/libexec/elogind/system-sleep/
     box "Done \n"
 fi
 

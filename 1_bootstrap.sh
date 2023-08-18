@@ -179,7 +179,7 @@ if command -v pipewire >/dev/null 2>&1 && command -v wireplumber >/dev/null 2>&1
 	sudo ln -s /usr/share/examples/wireplumber/10-wireplumber.conf /etc/pipewire/pipewire.conf.d/
 	## make pipewire-pulse autostart from pipewire
 	sudo ln -s /usr/share/examples/pipewire/20-pipewire-pulse.conf /etc/pipewire/pipewire.conf.d/
-	#sudo cp -v /usr/share/applications/pipewire-pulse.desktop /etc/xdg/autostart/
+
 	sudo cp -v /usr/share/applications/pipewire.desktop /etc/xdg/autostart/
 else
 	echo "\e[1;31m ! ERROR: pipewire and/or wireplumber is not installed!"; sleep 2
