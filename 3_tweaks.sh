@@ -262,7 +262,8 @@ fi
 boxf "> Grub tweaks: silence, speed-up, logo, disable mitigations, disable watchdog"
 sleep 2
 sudo sed -i.bak 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&quiet loglevel=3 udev.log_level=3 console=tty2 mitigations=off nowatchdog nmi_watchdog=0 msr.allow_writes=on fbcon=nodefer /' /etc/default/grub
-sudo sed -i 's/GRUB_TIMEOUT.*/GRUB_TIMEOUT=1/' /etc/default/grub
+sudo sed -i 's/GRUB_TIMEOUT.*/GRUB_TIMEOUT=0/' /etc/default/grub
+sudo sed -i 's/^#GRUB_HIDDEN_TIMEOUT.*/GRUB_HIDDEN_TIMEOUT=2/' /etc/default/grub
 sudo sed -i 's/^#GRUB_BACKGROUND/GRUB_BACKGROUND/' /etc/default/grub
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 box "Done \n"
