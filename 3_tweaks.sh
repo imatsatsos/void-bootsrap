@@ -91,13 +91,13 @@ fi
 ### Disable useless services (for a laptop) ###
 boxf "> Disabling useless services.."
 sleep 2
-[ -d /var/service/wpa_supplicant ] 	&& sudo rm -v /var/service/wpa_supplicant
-[ -d /var/service/dhcpcd ] 			&& sudo rm -v /var/service/dhcpcd
-[ -d /var/service/sshd ] 			&& sudo rm -v /var/service/sshd
-[ -d /var/service/agetty-tty6 ]     && sudo rm -v /var/service/agetty-tty6
-[ -d /var/service/agetty-tty5 ]     && sudo rm -v /var/service/agetty-tty5
-[ -d /var/service/agetty-tty4 ]     && sudo rm -v /var/service/agetty-tty4
-[ -d /var/service/agetty-tty3 ]     && sudo rm -v /var/service/agetty-tty3
+[ -d /var/service/wpa_supplicant ] && sudo rm -v /var/service/wpa_supplicant
+[ -d /var/service/dhcpcd ] 	   && sudo rm -v /var/service/dhcpcd
+[ -d /var/service/sshd ] 	   && sudo rm -v /var/service/sshd
+[ -d /var/service/agetty-tty6 ]    && sudo rm -v /var/service/agetty-tty6
+[ -d /var/service/agetty-tty5 ]    && sudo rm -v /var/service/agetty-tty5
+[ -d /var/service/agetty-tty4 ]    && sudo rm -v /var/service/agetty-tty4
+[ -d /var/service/agetty-tty3 ]    && sudo rm -v /var/service/agetty-tty3
 box "Done \n"
 
 
@@ -108,7 +108,7 @@ SYS_AUTOSTART="/etc/xdg/autostart"
 USER_AUTOSTART="$HOME/.config/autostart/"
 [ ! -d ${USER_AUTOSTART} ] &&  mkdir -p ${USER_AUTOSTART}
 if [ -f ${SYS_AUTOSTART}/zeitgeist-datahub.desktop ]; then
-    cp -fv ${SYS_AUTOSTART}/zeitgeist-datahub.desktop 				${USER_AUTOSTART}
+    cp -fv ${SYS_AUTOSTART}/zeitgeist-datahub.desktop 			${USER_AUTOSTART}
     echo "Hidden=true" >> ${USER_AUTOSTART}/zeitgeist-datahub.desktop
 fi
 if [ -f ${SYS_AUTOSTART}/org.gnome.SettingsDaemon.Wacom.desktop ]; then
