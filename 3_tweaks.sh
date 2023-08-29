@@ -320,7 +320,7 @@ fi
 ### TRIM
 boxf "> Running a trim on all supported disks.."
 sleep 1
-sudo fstrim -va
+sudo fstrim -a
 
 
 ### DONE
