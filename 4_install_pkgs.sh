@@ -45,8 +45,8 @@
 pkgs=("void-repo-nonfree" "void-repo-multilib" "void-repo-multilib-nonfree" \
       "steam libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit mesa-dri-32bit vulkan-loader-32bit" \
       "nvidia nvidia-vaapi-driver nvidia-libs-32bit" \
-      "Signal-Desktop" "firefox" "alacritty" "gimp" "fsearch" "seahorse" "rofi" "rofi-calc" "rofi-emoji" "geany" "mpv" "easyeffects" \
-      "pcmanfm" "nsxiv" "neofetch" "lxappearance" "file-roller" "polybar" "i3lock" "sxhkd" "pywal" \
+      "Signal-Desktop" "firefox" "alacritty" "gimp" "fsearch" "seahorse" "rofi" "rofi-calc" "rofi-emoji" "geany" "mpv" "easyeffects" "handbrake" \
+      "pcmanfm" "nsxiv" "neofetch" "lxappearance" "file-roller" "polybar" "i3lock" "sxhkd" "pywal" "wpgtk" \
       "htop" "btop" "nvtop" "intel-gpu-tools" "intel-undervolt" "sysbench" "ncdu" "fuzzypkg" "vsv" "simple-mtpfs" \
       "neovim" "ripgrep" "fd" "fzf" "git" "jq" "spellcheck" "gcc" \
       "xclip" "tree" "bat" "zip" "wget" "ranger" "gpick" "ImageMagick" "xcolor" "yt-dlp" "ffmpeg" "maim" "playerctl" \

@@ -70,7 +70,7 @@ PKGS_BASE="$X11 $COMMON $VGA"
 
 PKGS_GNOME="gnome-core eog file-roller gnome-tweaks dconf-editor alacritty"
 PKGS_PLASMA="kde5 dolphin konsole"
-PKGS_WM="gnome-keyring polkit-gnome upower pcmanfm sxhkd mpv dmenu rofi lxappearance dunst xwallpaper dejavu-fonts-ttf picom nsxiv maim playerctl"
+PKGS_WM="gnome-keyring lxsession upower pcmanfm sxhkd mpv dmenu rofi lxappearance dunst xwallpaper dejavu-fonts-ttf picom nsxiv maim playerctl"
 PKGS_DWM="base-devel libX11-devel libXft-devel libXinerama-devel"
 PKGS_I3="i3 alacritty i3status i3blocks i3lock"
 PKGS_SWAY="sway swaylock swayidle i3blocks"
