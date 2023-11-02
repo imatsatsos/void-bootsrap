@@ -272,7 +272,7 @@ box "Done \n"
 ### Fstab ext4 tweaks ###
 boxf "> Adding: noatime,commit=60 to fstab for ext4 root (/) partition.."
 sleep 2
-sudo sed -i.bak '/^\S*\s\+\/\s/{s/defaults/&,noatime,commit=60/}' /etc/fstab
+sudo sed -i.bak '/^\S*\s\+\/\s/{s/defaults/rw,noatime,commit=60/}' /etc/fstab
 box "Done \n"
 
 

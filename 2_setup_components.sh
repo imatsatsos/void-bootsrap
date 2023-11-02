@@ -71,7 +71,7 @@ setup_audio() {
 		# create autostart .desktop files
 		sudo cp -f /usr/share/applications/pipewire.desktop /etc/xdg/autostart/
 		green "Audio is setup and will autostart for DEs!\n"
-		green "For WMs: make sure to run pipewire in your autostart.\n"
+		green "For WMs, make sure to run pipewire in your autostart.\n"
 	fi
 }
 
